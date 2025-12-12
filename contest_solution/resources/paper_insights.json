@@ -1,0 +1,68 @@
+{
+  "aiopslab_2025": {
+    "title": "AIOpsLab: Agent Evaluation Platform",
+    "focus": ["benchmarking", "agent orchestration", "telemetry export"],
+    "takeaways": [
+      "Adopt four-level incident workflow: detection, localization, root cause, mitigation.",
+      "Keep telemetry ingestion interchangeable to support synthetic and real cloud traces.",
+      "Expose evaluation contracts early so agents reason with scoring metrics in mind."
+    ]
+  },
+  "mabc_emnlp2024": {
+    "title": "mABC: Multi-Agent Blockchain Collaboration",
+    "focus": ["consensus", "fault tolerance", "agent voting"],
+    "takeaways": [
+      "Use decentralized voting to synthesize multiple agent hypotheses.",
+      "Reward specialists with recent success rate to dampen hallucinated answers.",
+      "Log ballot provenance for post-hoc auditing and continuous learning."
+    ]
+  },
+  "flow_of_action_www2025": {
+    "title": "Flow-of-Action: SOP Enhanced Multi-Agent RCA",
+    "focus": ["SOP", "agent scheduling", "context pruning"],
+    "takeaways": [
+      "Represent RCA as explicit standard operating procedures (SOP) to reduce invalid tool calls.",
+      "Embed guard rails that prune telemetry before reasoning to fight overload.",
+      "Decompose tasks into actionable phases with success criteria for each." ]
+  },
+  "chain_of_event_fse24": {
+    "title": "Chain-of-Event: Interpretable RCA",
+    "focus": ["event graph", "causal reasoning", "explainability"],
+    "takeaways": [
+      "Construct event graphs linking services, metrics, and operations.",
+      "Score candidate chains with latency, error ratio, and topology consistency.",
+      "Surface interpretable path summaries in final explanations." ]
+  },
+  "tamo_tool_assisted_rca": {
+    "title": "TAMO: Tool-Assisted LLM Agent for RCA",
+    "focus": ["tooling", "adaptive actions", "multi-modal ingestion"],
+    "takeaways": [
+      "Expose specialized analyzers as callable tools with schema validation.",
+      "Fuse metric/log/trace findings via shared episodic memory.",
+      "Implement action budget to avoid redundant tool invocations." ]
+  },
+  "exploring_llm_agents_fse2024": {
+    "title": "Exploring LLM-based Agents for RCA",
+    "focus": ["react pattern", "retrieval", "production incidents"],
+    "takeaways": [
+      "Alternate between thought and tool actions, capturing rationales for each step.",
+      "Ground decisions in retrieval hits drawn from historical incidents.",
+      "Measure factual accuracy before finalizing component choice." ]
+  },
+  "flash_workflow_agent": {
+    "title": "FLASH: Workflow Automation Agent",
+    "focus": ["hindsight", "status supervision", "workflow retries"],
+    "takeaways": [
+      "Persist failure trajectories and reuse them as future hints.",
+      "Gate transitions with status checks to avoid cascading errors.",
+      "Provide a fallback plan when critical telemetry is missing." ]
+  },
+  "rcaeval_benchmark": {
+    "title": "RCAEval Benchmark",
+    "focus": ["evaluation", "datasets", "multi-system"],
+    "takeaways": [
+      "Validate RCA quality across multiple microservice archetypes.",
+      "Track component accuracy alongside reasoning coherence metrics.",
+      "Use consistent dataset adaptors to switch between Online Boutique, Sock Shop, and Train Ticket." ]
+  }
+}
