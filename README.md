@@ -1,48 +1,48 @@
 # AIOpsChallenge_Hybrid
 
-Hybrid root-cause analysis pipeline derived from the Beta solution. This repo contains the runnable submission code (`contest_solution`) plus sample outputs for different phases.
+基于 Beta 方案的混合式根因分析流水线，包含可直接提交的代码（`contest_solution`）以及各阶段示例输出。
 
-## What this repo has
-- `contest_solution/`: full pipeline (planner, specialists, consensus, reasoning, validator)
-- `submissions_phase1.jsonl`, `submissions_phase2.jsonl`, `submissions_2025-06-07.jsonl`: example outputs
-- `ground_truth_sample.jsonl`, `submissions_sample.jsonl`: small samples for quick checks
-- `.env`: LLM credentials and endpoints (not tracked)
+## 仓库内容
+- `contest_solution/`：全量流水线（规划、专家、共识、推理、校验）
+- `submissions_phase1.jsonl`、`submissions_phase2.jsonl`、`submissions_2025-06-07.jsonl`：示例输出
+- `ground_truth_sample.jsonl`、`submissions_sample.jsonl`：小样本校验文件
+- `.env`：LLM 密钥与端点（不纳入版本控制）
+- 📑 参考映射：[`reference/REFERENCE_NOTES.md`](reference/REFERENCE_NOTES.md)
 
-## Quick start
+## 快速开始
 ```bash
-# Install deps (Python 3.10+ recommended)
-pip install -r contest_solution/requirements.txt  # if you extracted a separate requirements file
-# or reuse project venv
+# 建议 Python 3.10+
+pip install -r contest_solution/requirements.txt   # 或复用已有 venv
 
-# Run full pipeline
+# 运行全流程
 python -m contest_solution.main \
   --telemetry-root /path/to/telemetry \
   --metadata /path/to/metadata_phase1.csv \
   --output submissions.jsonl
 
-# Optional flags
-# --limit N      : process first N cases only
-# --dry-run      : print records instead of writing to file
+# 可选参数
+# --limit N   仅处理前 N 个案例
+# --dry-run   只打印结果，不写文件
 ```
 
-## Algorithm (high level)
-1) Load telemetry window per case; build lightweight event graph when signals exist.
-2) Planner (Flow-of-Action) sets scope and retrieves paper insights for prompts.
-3) Specialists (metrics, logs, traces/graph) generate hypotheses with scores.
-4) Consensus combines mABC-style voting with priors and memory to rank components.
-5) Reasoning LLM produces component + reason + reasoning_trace; heuristic fallback if LLM fails.
-6) Validator enforces format/length limits and writes JSONL for the evaluator.
+## 算法概览
+1) 案例级加载时间窗遥测，若有信号则构建轻量事件图。
+2) 规划器（Flow-of-Action）设定范围，并检索论文洞见作为提示。
+3) 专家（指标/日志/链路与图）生成打分假设。
+4) 共识层用 mABC 式投票叠加先验与记忆，排序组件。
+5) 推理 LLM 生成 component + reason + reasoning_trace；失败则启发式兜底。
+6) 校验器控制格式与长度，输出评测所需 JSONL。
 
-## Configuration knobs
-- `.env`: `OPENAI_API_KEY`, base URL, model name, concurrency/timeouts.
-- `contest_solution/config.py`: toggle experts, priors, memory strength, max steps/lengths.
-- `contest_solution/resources/paper_insights.json`: RAG knowledge base for prompts.
-- `contest_solution/agents/consensus.py`: adjust prior weights and memory reward/penalty.
+## 配置入口
+- `.env`：`OPENAI_API_KEY`、Base URL、模型名、并发/超时等。
+- `contest_solution/config.py`：启用专家/先验/记忆，步数与长度上限。
+- `contest_solution/resources/paper_insights.json`：RAG 知识库，可自行扩充。
+- `contest_solution/agents/consensus.py`：先验权重、记忆奖励/惩罚可调。
 
-## Baseline scores (new judge)
-- Phase1: Component 14.69%, Reason 59.24%, Efficiency 81.87%, Explainability 14.67%, Final 39.23
-- Phase2: Component 2.08%, Reason 43.23%, Efficiency 81.87%, Explainability 17.23%, Final 28.04
+## 基线成绩（新版评测）
+- Phase1：Component 14.69%，Reason 59.24%，Efficiency 81.87%，Explainability 14.67%，Final 39.23
+- Phase2：Component 2.08%，Reason 43.23%，Efficiency 81.87%，Explainability 17.23%，Final 28.04
 
-## Notes
-- Keep `.env` out of version control; set env vars or export before running.
-- If telemetry days are missing, pipeline falls back to reasoning with empty signals.
+## 说明
+- `.env` 请勿入库，运行前自行导出环境变量。
+- 若某些 telemetry 日期缺失，流水线会在空信号下进行兜底推理。
