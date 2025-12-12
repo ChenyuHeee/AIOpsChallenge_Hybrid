@@ -27,14 +27,33 @@ contest_solution/
   main.py           # 命令行入口
 ```
 
-## 算法概要
-- **遥测融合**：`TelemetryLoader` 读取指标/日志/链路，并生成轻量事件图供后续传播分析。
-- **SOP 规划**：`PlannerAgent` 按 Flow-of-Action 模板提取事件时间窗与关键词，检索 `paper_insights.json` 中的最佳实践作为 LLM 提示。
-- **专家集成**：Metrics/Logs/Traces/Graph 专家独立评估组件严重度，生成带证据的 `Hypothesis`，降低单一信号偏差。
-- **带先验和记忆的共识**：`ConsensusOrchestrator` 融合 mABC 加权投票、FLASH 记忆，并对 adservice、checkoutservice 等高频组件设置先验，减少回退 `unknown`。
-- **LLM 推理**：`ReasoningAgent` 结合 SOP 阶段、组件候选、证据 JSON 与论文洞见构建 Prompt；解析失败时采用启发式兜底。
-- **轨迹格式化与校验**：`SubmissionValidator` 控制理由/推理步数上限，补齐参考证据，输出符合评测器要求的 JSONL。
-- **迭代评分**：在 2025-06-07 全量数据上通过 `mtr/judge/evaluate.py` 获得 Component Accuracy 8.33%、Reason Accuracy 58.33%、Final Score 35.51，为后续拓展提供基线。
+## 算法结构（Hybrid）
+
+### 数据流概览
+1) **入口**：`main.py` 读取 `metadata_xxx.csv`；按行构造案例上下文（uuid、时间窗、故障类别）。
+2) **遥测加载**：`data/loader.py` 以时间窗截取指标、日志、链路（若缺失则返回空信号），并构建轻量事件图节点/边。
+3) **SOP 规划**：`agents/planner.py` 按 Flow-of-Action 生成任务计划（ScopeTelemetry → SurfaceSignals → Analyze → Confirm），并注入 `resources/paper_insights.json` 中的论文摘要作为检索增强提示。
+4) **专家并行打分**：`agents/specialists.py` 产出多路假设 `Hypothesis`：
+  - Metrics 专家：基于异常指标与拓扑邻域的相关性得分。
+  - Logs 专家：检索错误/超时关键词，定位关联组件。
+  - Traces/Graph 专家：利用调用链异常与事件图边权，追踪上游/下游影响。
+5) **共识融合**：`agents/consensus.py` 将专家候选做加权投票（mABC 思路），叠加两类先验：
+  - **组件先验**：常见高风险组件（如 adservice、checkoutservice）有微弱提升，降低 unknown。
+  - **记忆强化**：对近期命中的组件给予奖励，失败样本惩罚，形成轻量“记忆分数”。
+  最终输出排序后的组件列表及分值。
+6) **LLM 推理与理由生成**：`agents/reasoning.py` 结合 SOP 阶段、共识候选、证据 JSON 和论文洞见构建 Prompt，产出 component + reason + reasoning_trace；如 LLM 失败，使用启发式兜底（例如选最高分组件并给定固定解释模板）。
+7) **校验与落盘**：`agents/validator.py` 检查字段完整性、步数/长度上限，填充缺失字段并输出符合评测器要求的 JSONL。
+
+### 关键配置与可调参数
+- `.env` / 环境变量：LLM Key、Base URL、模型名、并发度。
+- `config.py`：流水线开关（启用哪些专家/先验/记忆）、最大步数、理由字数限制、超时与重试次数。
+- `resources/paper_insights.json`：检索增强知识库，可追加新论文摘要。
+- `agents/consensus.py`：先验强度、记忆奖励/惩罚、投票权重。
+- `agents/specialists.py`：各专家的打分权重与启发式阈值。
+
+### 运行基线
+- Phase1（全量）在新评测脚本下得分：Component 14.69%、Reason 59.24%、Efficiency 81.87%、Explainability 14.67%、Final 39.23。
+- Phase2（全量）在新评测脚本下得分：Component 2.08%、Reason 43.23%、Efficiency 81.87%、Explainability 17.23%、Final 28.04。
 
 ## 快速开始
 
