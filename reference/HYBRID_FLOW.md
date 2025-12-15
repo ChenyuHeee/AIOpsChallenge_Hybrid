@@ -1,7 +1,5 @@
 # Hybrid 全流程（含论文要点标注）
 
-面向不了解论文的读者，描述端到端流程，并标注使用了哪篇论文的思路。
-
 ## 输入与输出
 - 输入：用户描述（含时间窗/关键词）、metrics/logs/traces（parquet）。
 - 输出：按评测格式的 JSONL：`component`、`reason`（限长）、`reasoning_trace`（3-7 步，SOP 对齐）、证据片段。
