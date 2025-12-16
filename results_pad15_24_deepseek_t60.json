@@ -1,0 +1,203 @@
+{
+  "metrics": {
+    "component_accuracy": 0.20833333333333334,
+    "reason_accuracy": 0.9583333333333334,
+    "efficiency": 0.8187307530779818,
+    "explainability": 0.1956521739130435,
+    "final_score": 56.81049593657692
+  },
+  "samples": [
+    {
+      "uuid": "abb62970-110",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 3
+    },
+    {
+      "uuid": "a54c75dc-111",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 0
+    },
+    {
+      "uuid": "f48a6b60-112",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 2
+    },
+    {
+      "uuid": "dc62e30c-113",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "bc2f1dfa-114",
+      "component_correct": false,
+      "reason_correct": false,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 0
+    },
+    {
+      "uuid": "541f72de-115",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "e2750b43-116",
+      "component_correct": true,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "a363d826-117",
+      "component_correct": true,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "dc331a0b-118",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 2
+    },
+    {
+      "uuid": "f18b68cd-119",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 1
+    },
+    {
+      "uuid": "a85d0720-120",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 1
+    },
+    {
+      "uuid": "66cfe1dd-121",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 3
+    },
+    {
+      "uuid": "8cf433b4-122",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 1
+    },
+    {
+      "uuid": "bc454cd0-123",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 2
+    },
+    {
+      "uuid": "ad84546c-124",
+      "component_correct": true,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 1,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "0fccdcad-125",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 4
+    },
+    {
+      "uuid": "de4a919c-126",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 1
+    },
+    {
+      "uuid": "8d818070-127",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 2
+    },
+    {
+      "uuid": "c1e7d172-128",
+      "component_correct": true,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 2
+    },
+    {
+      "uuid": "343ba04c-129",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 1
+    },
+    {
+      "uuid": "725d8034-130",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 0
+    },
+    {
+      "uuid": "08e3187d-131",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 0
+    },
+    {
+      "uuid": "21aa302f-132",
+      "component_correct": false,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 0
+    },
+    {
+      "uuid": "fc44280d-133",
+      "component_correct": true,
+      "reason_correct": true,
+      "step_count": 6,
+      "evidence_hit": 0,
+      "evidence_total": 1
+    }
+  ]
+}

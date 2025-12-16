@@ -1,0 +1,9 @@
+uuid,date,query
+f48a6b60-112,2025-06-07,Please analyze the abnormal event between 2025-06-07T02:10:26Z and 2025-06-07T02:27:26Z and provide the root cause.
+541f72de-115,2025-06-07,Determine the root cause of the system fault during 2025-06-07T05:10:31Z to 2025-06-07T05:27:31Z.
+dc331a0b-118,2025-06-07,The system experienced an anomaly from 2025-06-07T08:10:37Z to 2025-06-07T08:27:37Z. Please infer the possible cause.
+66cfe1dd-121,2025-06-07,A fault occurred from 2025-06-07T11:10:41Z to 2025-06-07T11:32:41Z. Please identify the root cause.
+8cf433b4-122,2025-06-07,The system experienced an anomaly from 2025-06-07T12:10:44Z to 2025-06-07T12:21:44Z. Please infer the possible cause.
+0fccdcad-125,2025-06-07,A fault occurred from 2025-06-07T15:11:05Z to 2025-06-07T15:33:05Z. Please identify the root cause.
+343ba04c-129,2025-06-07,A fault was detected from 2025-06-07T19:10:08Z to 2025-06-07T19:24:08Z. Please analyze its root cause.
+fc44280d-133,2025-06-07,Please analyze the abnormal event between 2025-06-07T23:10:13Z and 2025-06-07T23:29:13Z and provide the root cause.

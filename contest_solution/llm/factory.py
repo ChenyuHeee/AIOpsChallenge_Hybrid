@@ -14,6 +14,9 @@ LOGGER = logging.getLogger(__name__)
 
 def build_client(config: LLMConfig) -> LLMClient:
     provider = config.provider.lower()
+    if provider in {"dummy", "none", "off", "disabled"}:
+        LOGGER.info("LLM disabled via provider=%s; using dummy client", provider)
+        return DummyLLMClient()
     if provider.startswith("deepseek"):
         try:
             return DeepSeekClient(config)

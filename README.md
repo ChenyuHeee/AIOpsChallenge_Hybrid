@@ -30,14 +30,19 @@ python -m contest_solution.main \
 2) 规划器（Flow-of-Action）设定范围，并检索论文洞见作为提示。
 3) 专家（指标/日志/链路与图）生成打分假设。
 4) 共识层用 mABC 式投票叠加先验与记忆，排序组件。
-5) 推理 LLM 生成 component + reason + reasoning_trace；失败则启发式兜底。
+5) 组件（component）默认取共识层 Top-1；推理 LLM 仅用于生成 reason + reasoning_trace（失败则启发式兜底）。
 6) 校验器控制格式与长度，输出评测所需 JSONL。
 
 ## 配置入口
-- `.env`：`OPENAI_API_KEY`、Base URL、模型名、并发/超时等。
+- `.env`：`DEEPSEEK_API_KEY`/`OPENAI_API_KEY`、Base URL、模型名、并发/超时等。
 - `contest_solution/config.py`：启用专家/先验/记忆，步数与长度上限。
 - `contest_solution/resources/paper_insights.json`：RAG 知识库，可自行扩充。
 - `contest_solution/agents/consensus.py`：先验权重、记忆奖励/惩罚可调。
+
+常用环境变量：
+- `RCA_LLM_PROVIDER`：`deepseek` / `openai` / `dummy`
+- `RCA_LLM_TIMEOUT`：LLM 请求超时秒数（DeepSeek 未设置时默认 60s）
+- `RCA_WINDOW_PADDING_MIN`：遥测时间窗 padding（分钟），用于控制跨事件污染
 
 ## 基线成绩（新版评测）
 - Phase1：Component 14.69%，Reason 59.24%，Efficiency 81.87%，Explainability 14.67%，Final 39.23

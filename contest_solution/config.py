@@ -45,7 +45,7 @@ class LLMConfig:
     temperature: float = 0.0
     api_key: Optional[str] = None
     api_base: Optional[str] = None
-    timeout: float = 60.0
+    timeout: float = 10.0
 
     @classmethod
     def from_env(cls) -> "LLMConfig":
@@ -59,7 +59,12 @@ class LLMConfig:
         )
         api_base = os.getenv("RCA_LLM_API_BASE")
         temperature = float(os.getenv("RCA_LLM_TEMPERATURE", "0.0"))
-        timeout = float(os.getenv("RCA_LLM_TIMEOUT", "60"))
+        timeout_env = os.getenv("RCA_LLM_TIMEOUT")
+        if timeout_env is not None and timeout_env != "":
+            timeout = float(timeout_env)
+        else:
+            # DeepSeek often needs a higher request timeout than OpenAI-compatible defaults.
+            timeout = 60.0 if provider.startswith("deepseek") else 10.0
         return cls(provider=provider, model=model, temperature=temperature, api_key=api_key, api_base=api_base, timeout=timeout)
 
 

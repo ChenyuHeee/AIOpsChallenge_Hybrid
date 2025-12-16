@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+import os
 from typing import Any, Dict, Iterable, List, Tuple
 
 from ..config import load_memory, store_memory
@@ -40,43 +41,138 @@ class ConsensusOrchestrator:
         elif ranked[0][1] <= 0.0:
             fallback_component = self._top_prior_component(preferred=list(scores.keys()))
             ranked.insert(0, (fallback_component, self.component_priors.get(fallback_component, 0.0)))
-        self._update_memory(case_id, ranked)
+        
+        # Filter node candidates to top-2 by score to avoid LLM confusion (too many similar nodes).
+        ranked = self._filter_weak_nodes(ranked)
+        
+        self._append_history(case_id, ranked)
         store_memory(self.memory_path, self.memory)
         return ConsensusResult(ranked_components=ranked, supporting_evidence=evidence)
 
     def _specialist_weight(self, source: str) -> float:
-        weights = {
-            "MetricSpecialist": 1.2,
-            "LogSpecialist": 1.1,
-            "TraceSpecialist": 1.1,
+        # Defaults chosen from empirical trials.
+        defaults = {
+            "MetricSpecialist": 1.0,
+            "LogSpecialist": 1.15,
+            "TraceSpecialist": 1.6,
             "GraphSpecialist": 1.0,
             "ReasoningAgent": 1.3,
         }
-        return weights.get(source, 1.0)
+
+        # Allow lightweight hyperparameter tuning via env vars (used by CV/search scripts).
+        env_overrides = {
+            "MetricSpecialist": os.getenv("RCA_WEIGHT_METRIC"),
+            "LogSpecialist": os.getenv("RCA_WEIGHT_LOG"),
+            "TraceSpecialist": os.getenv("RCA_WEIGHT_TRACE"),
+            "GraphSpecialist": os.getenv("RCA_WEIGHT_GRAPH"),
+            "ReasoningAgent": os.getenv("RCA_WEIGHT_REASONING"),
+        }
+        raw = env_overrides.get(source)
+        if raw is not None and raw != "":
+            try:
+                return float(raw)
+            except ValueError:
+                return defaults.get(source, 1.0)
+        return defaults.get(source, 1.0)
 
     def _memory_reward(self, component: str) -> float:
+        # IMPORTANT:
+        # We do NOT self-reinforce based on our own predictions (that creates a positive feedback
+        # loop that tends to overfit on popular services like checkoutservice/cartservice).
+        # Judge-derived feedback can be used, but it must be explicitly enabled because small or
+        # biased feedback sets can easily hurt LA.
         if component == "unknown":
-            return 0.7
-        component_memory = self._ensure_dict("component_success")
-        success_rate = float(component_memory.get(component, 0.4))
-        return 1.0 + 0.6 * success_rate
+            return 0.85
 
-    def _update_memory(self, case_id: str, ranked: List[Tuple[str, float]]) -> None:
-        if "component_success" not in self.memory:
-            self.memory["component_success"] = {}
-        if not ranked:
-            return
-        winner, score = ranked[0]
-        if winner == "unknown":
-            return
-        component_memory = self._ensure_dict("component_success")
-        baseline = float(component_memory.get(winner, 0.5))
-        updated = min(1.0, baseline * 0.9 + (1 if score > 0 else 0) * 0.1)
-        component_memory[winner] = updated
+        use_judge_memory = os.getenv("RCA_USE_JUDGE_MEMORY", "0") not in {"0", "false", "False"}
+
+        # Path A (preferred): judge-updated per-component stats.
+        if use_judge_memory:
+            stats = self.memory.get("component_stats")
+            if not isinstance(stats, dict):
+                stats = {}
+                self.memory["component_stats"] = stats
+
+            entry = stats.get(component)
+            if not isinstance(entry, dict):
+                return 1.0
+            try:
+                correct = int(entry.get("correct", 0))
+                total = int(entry.get("total", 0))
+            except Exception:
+                return 1.0
+
+            # Require enough samples before trusting the feedback signal.
+            min_total = int(os.getenv("RCA_MEMORY_MIN_TOTAL", "20"))
+            if total < min_total:
+                return 1.0
+
+            rate = correct / max(1, total)
+            # Mild effect: 0.9 (bad) ~ 1.1 (good)
+            return 0.9 + 0.2 * rate
+
+        # Path B (legacy): component_success values already accumulated in memory.
+        legacy = self.memory.get("component_success")
+        if isinstance(legacy, dict) and component in legacy:
+            try:
+                success_rate = float(legacy.get(component, 0.5))
+            except Exception:
+                return 1.0
+            # Mild effect: 0.9 ~ 1.3 (keeps previous behavior helpful but less dominating)
+            return 0.9 + 0.8 * max(0.0, min(1.0, success_rate))
+
+        return 1.0
+
+    def apply_component_feedback(self, case_id: str, predicted: str, gt_component: str) -> None:
+        """Update memory using judge-style correctness feedback.
+
+        predicted: submission component (already normalized)
+        gt_component: ground truth component string (may include 'a->b')
+        """
+
+        predicted = (predicted or "").strip()
+        gt_component = (gt_component or "").strip()
+        gt_parts = [part.strip() for part in gt_component.replace("->", "+").split("+") if part.strip()]
+        is_correct = bool(predicted and gt_parts and predicted in gt_parts)
+
+        stats = self.memory.get("component_stats")
+        if not isinstance(stats, dict):
+            stats = {}
+            self.memory["component_stats"] = stats
+        entry = stats.get(predicted)
+        if not isinstance(entry, dict):
+            entry = {"correct": 0, "total": 0}
+            stats[predicted] = entry
+        entry["total"] = int(entry.get("total", 0)) + 1
+        if is_correct:
+            entry["correct"] = int(entry.get("correct", 0)) + 1
+
+        # Keep legacy success-rate mirror for backward compatibility with existing memory files.
+        legacy = self.memory.get("component_success")
+        if not isinstance(legacy, dict):
+            legacy = {}
+            self.memory["component_success"] = legacy
+        legacy[predicted] = int(entry.get("correct", 0)) / max(1, int(entry.get("total", 0)))
+
+        # Per-case audit trail (useful for debugging but not used at inference time)
+        case_fb = self.memory.get("case_feedback")
+        if not isinstance(case_fb, dict):
+            case_fb = {}
+            self.memory["case_feedback"] = case_fb
+        case_fb[str(case_id)] = {
+            "predicted": predicted,
+            "gt": gt_component,
+            "correct": is_correct,
+        }
+
+    def _append_history(self, case_id: str, ranked: List[Tuple[str, float]]) -> None:
         history = self.memory.get("history")
         if not isinstance(history, list):
             history = []
             self.memory["history"] = history
+        if not ranked:
+            return
+        winner, score = ranked[0]
         history.append({"case": case_id, "component": winner, "score": score})
 
     def _load_component_priors(self) -> Dict[str, float]:
@@ -99,9 +195,12 @@ class ConsensusOrchestrator:
         return defaults
 
     def _component_prior(self, component: str) -> float:
+        # Priors were useful early on, but they can heavily bias predictions toward
+        # popular services and suppress node/edge-endpoint components.
+        # Favor evidence-driven ranking.
         if not component:
-            return 0.8
-        return self.component_priors.get(component, 1.0)
+            return 0.9
+        return 1.0
 
     def _top_prior_component(self, preferred: List[str] | None = None) -> str:
         candidates = preferred or list(self.component_priors.keys())
@@ -123,3 +222,26 @@ class ConsensusOrchestrator:
         value = {}
         self.memory[key] = value
         return value
+    
+    @staticmethod
+    def _filter_weak_nodes(ranked: List[Tuple[str, float]]) -> List[Tuple[str, float]]:
+        """Keep only top-2 node candidates to avoid LLM picking wrong nodes from many similar ones."""
+        node_items = [(c, s) for c, s in ranked if c and (c.startswith("aiops-k8s-") or c.startswith("k8s-master"))]
+        non_node_items = [(c, s) for c, s in ranked if not (c and (c.startswith("aiops-k8s-") or c.startswith("k8s-master")))]
+        # Keep top-2 nodes by score, drop the rest.
+        kept_nodes = node_items[:2]
+        # Rebuild ranked list with filtered nodes inserted at their original relative positions.
+        result = []
+        node_idx = 0
+        non_node_idx = 0
+        for c, s in ranked:
+            is_node = c and (c.startswith("aiops-k8s-") or c.startswith("k8s-master"))
+            if is_node:
+                if node_idx < len(kept_nodes):
+                    result.append(kept_nodes[node_idx])
+                    node_idx += 1
+            else:
+                if non_node_idx < len(non_node_items):
+                    result.append(non_node_items[non_node_idx])
+                    non_node_idx += 1
+        return result

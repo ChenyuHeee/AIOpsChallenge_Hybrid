@@ -1,0 +1,279 @@
+{
+  "component_priors": {
+    "adservice": 1.4,
+    "checkoutservice": 1.3,
+    "recommendationservice": 1.25,
+    "productcatalogservice": 1.2,
+    "frontend": 1.15,
+    "cartservice": 1.1
+  },
+  "component_success": {
+    "adservice": 0.9601167784615637
+  },
+  "history": [
+    {
+      "case": "abb62970-110",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "a363d826-117",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "adservice",
+      "score": 1.4
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "adservice",
+      "score": 1.4
+    }
+  ],
+  "component_stats": {
+    "emailservice": {
+      "correct": 0,
+      "total": 1
+    },
+    "checkoutservice": {
+      "correct": 4,
+      "total": 12
+    },
+    "shippingservice": {
+      "correct": 0,
+      "total": 2
+    },
+    "cartservice": {
+      "correct": 1,
+      "total": 8
+    },
+    "adservice": {
+      "correct": 0,
+      "total": 1
+    }
+  },
+  "case_feedback": {
+    "08e3187d-131": {
+      "predicted": "emailservice",
+      "gt": "aiops-k8s-08",
+      "correct": false
+    },
+    "0fccdcad-125": {
+      "predicted": "checkoutservice",
+      "gt": "recommendationservice",
+      "correct": false
+    },
+    "21aa302f-132": {
+      "predicted": "shippingservice",
+      "gt": "aiops-k8s-07",
+      "correct": false
+    },
+    "343ba04c-129": {
+      "predicted": "checkoutservice",
+      "gt": "adservice",
+      "correct": false
+    },
+    "541f72de-115": {
+      "predicted": "checkoutservice",
+      "gt": "frontend->productcatalogservice",
+      "correct": false
+    },
+    "66cfe1dd-121": {
+      "predicted": "checkoutservice",
+      "gt": "emailservice",
+      "correct": false
+    },
+    "725d8034-130": {
+      "predicted": "cartservice",
+      "gt": "aiops-k8s-06",
+      "correct": false
+    },
+    "8cf433b4-122": {
+      "predicted": "shippingservice",
+      "gt": "aiops-k8s-03",
+      "correct": false
+    },
+    "8d818070-127": {
+      "predicted": "cartservice",
+      "gt": "frontend->adservice",
+      "correct": false
+    },
+    "a363d826-117": {
+      "predicted": "cartservice",
+      "gt": "frontend->cartservice",
+      "correct": true
+    },
+    "a54c75dc-111": {
+      "predicted": "checkoutservice",
+      "gt": "aiops-k8s-01",
+      "correct": false
+    },
+    "a85d0720-120": {
+      "predicted": "cartservice",
+      "gt": "aiops-k8s-04",
+      "correct": false
+    },
+    "abb62970-110": {
+      "predicted": "cartservice",
+      "gt": "adservice",
+      "correct": false
+    },
+    "ad84546c-124": {
+      "predicted": "checkoutservice",
+      "gt": "checkoutservice->shippingservice",
+      "correct": true
+    },
+    "bc2f1dfa-114": {
+      "predicted": "checkoutservice",
+      "gt": "aiops-k8s-08",
+      "correct": false
+    },
+    "bc454cd0-123": {
+      "predicted": "cartservice",
+      "gt": "checkoutservice->emailservice",
+      "correct": false
+    },
+    "c1e7d172-128": {
+      "predicted": "checkoutservice",
+      "gt": "frontend->checkoutservice",
+      "correct": true
+    },
+    "dc331a0b-118": {
+      "predicted": "checkoutservice",
+      "gt": "frontend->recommendationservice",
+      "correct": false
+    },
+    "dc62e30c-113": {
+      "predicted": "checkoutservice",
+      "gt": "cartservice->redis-cart",
+      "correct": false
+    },
+    "de4a919c-126": {
+      "predicted": "cartservice",
+      "gt": "paymentservice",
+      "correct": false
+    },
+    "e2750b43-116": {
+      "predicted": "checkoutservice",
+      "gt": "checkoutservice->paymentservice",
+      "correct": true
+    },
+    "f18b68cd-119": {
+      "predicted": "cartservice",
+      "gt": "aiops-k8s-07",
+      "correct": false
+    },
+    "f48a6b60-112": {
+      "predicted": "adservice",
+      "gt": "recommendationservice",
+      "correct": false
+    },
+    "fc44280d-133": {
+      "predicted": "checkoutservice",
+      "gt": "checkoutservice->emailservice",
+      "correct": true
+    }
+  }
+}

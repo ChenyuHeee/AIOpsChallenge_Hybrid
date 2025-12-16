@@ -70,6 +70,11 @@ class ContestOrchestrator:
         ctx = SpecialistContext(keywords=plan.keywords, component_hints=plan.component_hints)
         hypotheses = self._run_specialists(telemetry, ctx)
         consensus_result = self.consensus.vote(case.uuid, hypotheses)
+        # Strategy: keep component selection evidence-driven (consensus top-1) to preserve LA.
+        # Use LLM primarily to improve TA via better reason/trace generation.
+        consensus_component = (
+            consensus_result.ranked_components[0][0] if consensus_result.ranked_components else "unknown"
+        )
         hypothesis_bank = self._group_by_component(hypotheses)
         reasoning = self.reasoning.run(
             uuid=case.uuid,
@@ -79,7 +84,8 @@ class ContestOrchestrator:
             ranked_components=consensus_result.ranked_components,
             hypothesis_bank=hypothesis_bank,
         )
-        component, reason, steps = self.validator.enforce_limits(reasoning.component, reasoning.reason, reasoning.steps)
+        component, reason, steps = self.validator.enforce_limits(consensus_component, reasoning.reason, reasoning.steps)
+        reason = self.validator.enrich_reason(reason, component, hypothesis_bank)
         trace = self.validator.build_trace(steps, component, hypothesis_bank)
         LOGGER.debug("Case %s => component %s", case.uuid, component)
         return SubmissionEntry(uuid=case.uuid, component=component, reason=reason, reasoning_trace=trace)
