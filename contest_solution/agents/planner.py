@@ -30,7 +30,17 @@ class PlannerAgent:
 
     def build_plan(self, uuid: str, query: str) -> CasePlan:
         keywords = self._extract_keywords(query)
-        hints = [kw for kw in keywords if kw.endswith("service") or kw.endswith("pod") or kw.endswith("db")]
+        hints = [
+            kw
+            for kw in keywords
+            if (
+                ("service" in kw)
+                or kw.endswith("pod")
+                or kw.endswith("db")
+                or kw.startswith("aiops-k8s-")
+                or kw.startswith("k8s-master")
+            )
+        ]
         window = self._extract_time_window(query)
         sop_steps = [step.name for step in INCIDENT_SOP]
         matched_insights = self.insight_repo.relevant(query, limit=4)

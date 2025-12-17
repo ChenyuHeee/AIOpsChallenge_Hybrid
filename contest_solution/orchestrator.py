@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Iterator, List
@@ -69,7 +70,7 @@ class ContestOrchestrator:
         telemetry = self.loader.load(self.telemetry_root, case.date, plan.time_window)
         ctx = SpecialistContext(keywords=plan.keywords, component_hints=plan.component_hints)
         hypotheses = self._run_specialists(telemetry, ctx)
-        consensus_result = self.consensus.vote(case.uuid, hypotheses)
+        consensus_result = self.consensus.vote(case.uuid, hypotheses, component_hints=plan.component_hints)
         # Strategy: keep component selection evidence-driven (consensus top-1) to preserve LA.
         # Use LLM primarily to improve TA via better reason/trace generation.
         consensus_component = (
@@ -84,7 +85,14 @@ class ContestOrchestrator:
             ranked_components=consensus_result.ranked_components,
             hypothesis_bank=hypothesis_bank,
         )
-        component, reason, steps = self.validator.enforce_limits(consensus_component, reasoning.reason, reasoning.steps)
+
+        component_source = os.getenv("RCA_COMPONENT_SOURCE", "consensus").strip().lower() or "consensus"
+        if component_source == "llm":
+            chosen_component = reasoning.component or consensus_component
+        else:
+            chosen_component = consensus_component
+
+        component, reason, steps = self.validator.enforce_limits(chosen_component, reasoning.reason, reasoning.steps)
         reason = self.validator.enrich_reason(reason, component, hypothesis_bank)
         trace = self.validator.build_trace(steps, component, hypothesis_bank)
         LOGGER.debug("Case %s => component %s", case.uuid, component)

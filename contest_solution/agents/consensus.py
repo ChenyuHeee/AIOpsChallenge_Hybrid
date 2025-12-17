@@ -23,9 +23,10 @@ class ConsensusOrchestrator:
         self.memory: Dict[str, Any] = load_memory(memory_path)
         self.component_priors = self._load_component_priors()
 
-    def vote(self, case_id: str, hypotheses: Iterable[Hypothesis]) -> ConsensusResult:
+    def vote(self, case_id: str, hypotheses: Iterable[Hypothesis], component_hints: List[str] | None = None) -> ConsensusResult:
         scores: Dict[str, float] = defaultdict(float)
         evidence: Dict[str, List[str]] = defaultdict(list)
+        modality_support: Dict[str, set[str]] = defaultdict(set)
         for hypothesis in hypotheses:
             weight = self._specialist_weight(hypothesis.source)
             reinforcement = self._memory_reward(hypothesis.component)
@@ -34,6 +35,20 @@ class ConsensusOrchestrator:
             scores[hypothesis.component] += final_score
             for item in hypothesis.evidence:
                 evidence[hypothesis.component].append(f"[{item.modality}] {item.summary}")
+                modality_support[hypothesis.component].add(str(item.modality))
+
+        # Node-fault aggregation heuristic:
+        # If many services show anomalies in the window AND a node candidate has strong
+        # metrics/traces evidence, boost the node score. This helps node-root-cause cases
+        # where symptoms appear across multiple services.
+        self._apply_node_fault_boost(scores, evidence)
+
+        # Optional: prefer components supported by multiple modalities.
+        self._apply_multimodal_bonus(scores, modality_support)
+
+        # Optional: boost components explicitly hinted by query keywords (planner hints).
+        self._apply_hint_bonus(scores, component_hints)
+
         ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         if not ranked:
             fallback_component = self._top_prior_component()
@@ -48,6 +63,100 @@ class ConsensusOrchestrator:
         self._append_history(case_id, ranked)
         store_memory(self.memory_path, self.memory)
         return ConsensusResult(ranked_components=ranked, supporting_evidence=evidence)
+
+    @staticmethod
+    def _apply_hint_bonus(scores: Dict[str, float], component_hints: List[str] | None) -> None:
+        if os.getenv("RCA_ENABLE_HINT_BONUS", "0") in {"0", "false", "False"}:
+            return
+        if not component_hints:
+            return
+        hints = {str(h).strip().lower() for h in component_hints if str(h).strip()}
+        if not hints:
+            return
+
+        try:
+            bonus = float(os.getenv("RCA_HINT_BONUS", "0.25"))
+        except ValueError:
+            bonus = 0.25
+        bonus = max(0.0, min(1.5, bonus))
+        factor = 1.0 + bonus
+
+        for component, base in list(scores.items()):
+            if base <= 0:
+                continue
+            if component and component.lower() in hints:
+                scores[component] = base * factor
+
+    @staticmethod
+    def _apply_multimodal_bonus(scores: Dict[str, float], modality_support: Dict[str, set[str]]) -> None:
+        if os.getenv("RCA_ENABLE_MODALITY_BONUS", "0") in {"0", "false", "False"}:
+            return
+        try:
+            alpha = float(os.getenv("RCA_MODALITY_BONUS_ALPHA", "0.15"))
+        except ValueError:
+            alpha = 0.15
+        alpha = max(0.0, min(0.6, alpha))
+        try:
+            cap = float(os.getenv("RCA_MODALITY_BONUS_CAP", "1.4"))
+        except ValueError:
+            cap = 1.4
+        cap = max(1.0, min(3.0, cap))
+
+        for component, base in list(scores.items()):
+            if base <= 0:
+                continue
+            modalities = modality_support.get(component) or set()
+            # Ignore empty/unknown modality sets.
+            m = len([x for x in modalities if x])
+            if m <= 1:
+                continue
+            factor = min(cap, 1.0 + alpha * float(m - 1))
+            scores[component] = base * factor
+
+    @staticmethod
+    def _is_node(component: str) -> bool:
+        return bool(component) and (
+            component.startswith("aiops-k8s-") or component.startswith("k8s-master")
+        )
+
+    @classmethod
+    def _apply_node_fault_boost(cls, scores: Dict[str, float], evidence: Dict[str, List[str]]) -> None:
+        # Experimental heuristic. Keep it OFF by default because aggressive node boosting
+        # can hurt LA when node evidence is correlated but not causal.
+        if os.getenv("RCA_ENABLE_NODE_BOOST", "0") in {"0", "false", "False"}:
+            return
+
+        # Count how many non-node components have meaningful scores.
+        non_node_scores = [v for k, v in scores.items() if not cls._is_node(k) and k != "unknown" and v > 0]
+        if len(non_node_scores) < 3:
+            return
+        threshold = sorted(non_node_scores, reverse=True)[min(4, len(non_node_scores) - 1)]
+        service_pressure = sum(1 for v in non_node_scores if v >= threshold)
+        if service_pressure < 3:
+            return
+
+        base_boost = float(os.getenv("RCA_NODE_BOOST", "0.35"))
+        max_boost = float(os.getenv("RCA_NODE_BOOST_MAX", "0.9"))
+        scale = min(1.0, service_pressure / 6.0)
+        boost = min(max_boost, base_boost * (1.0 + 0.8 * scale))
+
+        for component in list(scores.keys()):
+            if not cls._is_node(component):
+                continue
+            ev = evidence.get(component) or []
+            if len(ev) < 2:
+                continue
+            modalities = set()
+            for line in ev:
+                if line.startswith("[metrics]"):
+                    modalities.add("metrics")
+                elif line.startswith("[traces]"):
+                    modalities.add("traces")
+            # Only boost when BOTH metrics and traces agree on the node.
+            # This keeps precision high; boosting on a single modality was observed to hurt LA.
+            if not ("metrics" in modalities and "traces" in modalities):
+                continue
+            scores[component] *= (1.0 + boost)
 
     def _specialist_weight(self, source: str) -> float:
         # Defaults chosen from empirical trials.
@@ -200,7 +309,15 @@ class ConsensusOrchestrator:
         # Favor evidence-driven ranking.
         if not component:
             return 0.9
-        return 1.0
+
+        base = float(self.component_priors.get(component, 1.0))
+        try:
+            scale = float(os.getenv("RCA_COMPONENT_PRIOR_SCALE", "1.0"))
+        except ValueError:
+            scale = 1.0
+        scale = max(0.0, min(1.0, scale))
+        # scale=1.0 => keep base prior; scale=0.0 => disable (becomes 1.0)
+        return 1.0 + (base - 1.0) * scale
 
     def _top_prior_component(self, preferred: List[str] | None = None) -> str:
         candidates = preferred or list(self.component_priors.keys())

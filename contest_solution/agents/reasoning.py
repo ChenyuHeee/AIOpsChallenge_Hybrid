@@ -41,8 +41,10 @@ class ReasoningAgent:
         prompt = self._build_prompt(uuid, query, plan_steps, insights, ranked_components, hypothesis_bank)
         raw = self._call_llm(prompt)
         parsed = self._parse(raw)
+        # Align component token with known candidates (case-insensitive) to avoid token mismatch.
+        parsed.component = self._align_component(parsed.component, ranked_components)
         # If LLM is unavailable or returns unknown, fall back to consensus+evidence.
-        if not parsed.component or parsed.component == "unknown":
+        if not parsed.component or parsed.component.strip().lower() == "unknown":
             parsed = self._fallback(ranked_components, hypothesis_bank)
         return ReasoningOutput(component=parsed.component, reason=parsed.reason, steps=parsed.steps, raw_response=raw)
 
@@ -153,7 +155,7 @@ Respond with strict JSON having keys component, reason, analysis_steps.
         except Exception as exc:  # noqa: BLE001
             LOGGER.warning("Failed to parse LLM response: %s", exc)
             return ReasoningOutput(component="", reason="", steps=[], raw_response=raw)
-        component = str(data.get("component", "")).strip().lower()
+        component = str(data.get("component", "")).strip()
         reason = str(data.get("reason", "")).strip()
         steps_raw = data.get("analysis_steps", [])
         if isinstance(steps_raw, str):
@@ -162,6 +164,24 @@ Respond with strict JSON having keys component, reason, analysis_steps.
             steps = [str(step).strip() for step in steps_raw if str(step).strip()]
         steps = steps[: max(3, self.config.target_trace_steps)]
         return ReasoningOutput(component=component, reason=reason, steps=steps, raw_response=raw)
+
+    @staticmethod
+    def _align_component(component: str, ranked_components: List[tuple[str, float]]) -> str:
+        if not component:
+            return component
+        component_clean = component.strip()
+        if not component_clean:
+            return ""
+
+        candidates = [c for c, _ in ranked_components]
+        if component_clean in candidates:
+            return component_clean
+
+        lowered = component_clean.lower()
+        for candidate in candidates:
+            if candidate.lower() == lowered:
+                return candidate
+        return component_clean
 
     def _fallback(self, ranked_components: List[tuple[str, float]], hypothesis_bank: Dict[str, List[Hypothesis]]) -> ReasoningOutput:
         if ranked_components:

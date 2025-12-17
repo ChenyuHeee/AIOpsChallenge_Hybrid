@@ -130,6 +130,3811 @@
       "case": "fc44280d-133",
       "component": "adservice",
       "score": 1.4
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 7.990266984714726
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.211641841903376
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "aiops-k8s-07",
+      "score": 7.951265376726995
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.182568744086854
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 12.863298621758162
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.339698835800537
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.500968925902251
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 7.567239420459693
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 7.744016947507822
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.641129737587574
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 14.883735284951747
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.129530184644508
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 7.990266984714726
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.211641841903376
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "aiops-k8s-07",
+      "score": 7.951265376726995
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.182568744086854
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 12.863298621758162
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.339698835800537
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.500968925902251
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 7.567239420459693
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 7.744016947507822
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.641129737587574
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 14.883735284951747
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.129530184644508
+    },
+    {
+      "case": "eb0c4ea8-182",
+      "component": "adservice",
+      "score": 5.301926395237213
+    },
+    {
+      "case": "97d37c35-186",
+      "component": "adservice",
+      "score": 21.51656010348661
+    },
+    {
+      "case": "e55fb1cb-192",
+      "component": "adservice",
+      "score": 7.473211325898867
+    },
+    {
+      "case": "913e1ecf-194",
+      "component": "aiops-k8s-07",
+      "score": 8.36905043365985
+    },
+    {
+      "case": "d3dd6ed7-183",
+      "component": "aiops-k8s-03",
+      "score": 5.520851154366207
+    },
+    {
+      "case": "a499f40d-202",
+      "component": "adservice",
+      "score": 7.739131635753944
+    },
+    {
+      "case": "7513dbaf-190",
+      "component": "adservice",
+      "score": 8.169075508513306
+    },
+    {
+      "case": "de1d442d-197",
+      "component": "adservice",
+      "score": 6.9147910517624
+    },
+    {
+      "case": "e4ef8a12-193",
+      "component": "adservice",
+      "score": 7.844559082914712
+    },
+    {
+      "case": "7f595b45-181",
+      "component": "adservice",
+      "score": 4.329930647153727
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "eb0c4ea8-182",
+      "component": "adservice",
+      "score": 5.449664388118083
+    },
+    {
+      "case": "97d37c35-186",
+      "component": "adservice",
+      "score": 7.100589852251588
+    },
+    {
+      "case": "e55fb1cb-192",
+      "component": "adservice",
+      "score": 7.89891563115928
+    },
+    {
+      "case": "913e1ecf-194",
+      "component": "aiops-k8s-07",
+      "score": 8.608228252264665
+    },
+    {
+      "case": "d3dd6ed7-183",
+      "component": "aiops-k8s-08",
+      "score": 5.68661278866073
+    },
+    {
+      "case": "a499f40d-202",
+      "component": "adservice",
+      "score": 7.793083657664716
+    },
+    {
+      "case": "eb0c4ea8-182",
+      "component": "adservice",
+      "score": 5.449664388118083
+    },
+    {
+      "case": "97d37c35-186",
+      "component": "adservice",
+      "score": 7.100589852251588
+    },
+    {
+      "case": "e55fb1cb-192",
+      "component": "adservice",
+      "score": 7.89891563115928
+    },
+    {
+      "case": "913e1ecf-194",
+      "component": "aiops-k8s-07",
+      "score": 8.608228252264665
+    },
+    {
+      "case": "d3dd6ed7-183",
+      "component": "aiops-k8s-08",
+      "score": 5.68661278866073
+    },
+    {
+      "case": "a499f40d-202",
+      "component": "adservice",
+      "score": 7.793083657664716
+    },
+    {
+      "case": "958ecb16-253",
+      "component": "adservice",
+      "score": 8.225338545756584
+    },
+    {
+      "case": "f35a1832-257",
+      "component": "adservice",
+      "score": 15.137948064135449
+    },
+    {
+      "case": "757fa56f-263",
+      "component": "adservice",
+      "score": 7.703447584567945
+    },
+    {
+      "case": "b06b79b6-265",
+      "component": "adservice",
+      "score": 7.7569291935371325
+    },
+    {
+      "case": "71964944-254",
+      "component": "adservice",
+      "score": 9.41217346385909
+    },
+    {
+      "case": "535dd1bd-273",
+      "component": "adservice",
+      "score": 4.227475655988848
+    },
+    {
+      "case": "958ecb16-253",
+      "component": "adservice",
+      "score": 8.225338545756584
+    },
+    {
+      "case": "f35a1832-257",
+      "component": "adservice",
+      "score": 15.137948064135449
+    },
+    {
+      "case": "757fa56f-263",
+      "component": "adservice",
+      "score": 7.703447584567945
+    },
+    {
+      "case": "b06b79b6-265",
+      "component": "adservice",
+      "score": 7.7569291935371325
+    },
+    {
+      "case": "71964944-254",
+      "component": "adservice",
+      "score": 9.41217346385909
+    },
+    {
+      "case": "535dd1bd-273",
+      "component": "adservice",
+      "score": 4.227475655988848
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.464338979464252
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 9.140328437013657
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 7.912811458477794
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.33674111936418
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.607871114712356
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 10.760041928454411
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.549837727258275
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 8.077976817480739
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 8.159719914025981
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.265375124852467
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 8.169223987744026
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 8.353890452644357
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 9.978760809272075
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 8.452962294375286
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 7.935403292135472
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 6.85035086274286
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.464338979464252
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 9.140328437013657
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 7.912811458477794
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.33674111936418
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.607871114712356
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 10.760041928454411
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.549837727258275
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 8.077976817480739
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 8.159719914025981
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.265375124852467
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 8.169223987744026
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 8.353890452644357
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 9.978760809272075
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 8.452962294375286
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 7.935403292135472
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 6.85035086274286
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 7.5027744653206545
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.523841716151754
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.05335318261775
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 9.106202206449222
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.362968828146794
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 8.95979451318392
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 8.33545092157917
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.42942306975593
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.393403215925597
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 9.076215004687565
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 7.458952700357244
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.594309119984755
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 8.549224668391926
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 6.902276926079618
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 8.886376950705888
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 8.06894973655832
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 7.93364975219135
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.401285445151917
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 8.174735913433608
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 7.179355248628125
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 7.834902017325824
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 7.7303234157490195
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.033255083958573
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.167290082615348
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 7.5027744653206545
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.523841716151754
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.05335318261775
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 9.106202206449222
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.362968828146794
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 8.95979451318392
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 8.33545092157917
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.42942306975593
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.393403215925597
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 9.076215004687565
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 7.458952700357244
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.594309119984755
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 8.549224668391926
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 6.902276926079618
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 8.886376950705888
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 8.06894973655832
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 7.93364975219135
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.401285445151917
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 8.174735913433608
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 7.179355248628125
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 7.834902017325824
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 7.7303234157490195
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.033255083958573
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.167290082615348
+    },
+    {
+      "case": "7f595b45-181",
+      "component": "adservice",
+      "score": 4.368610010625255
+    },
+    {
+      "case": "eb0c4ea8-182",
+      "component": "adservice",
+      "score": 5.449664388118083
+    },
+    {
+      "case": "d3dd6ed7-183",
+      "component": "aiops-k8s-08",
+      "score": 5.68661278866073
+    },
+    {
+      "case": "fb327034-184",
+      "component": "adservice",
+      "score": 5.432919754367748
+    },
+    {
+      "case": "1fbef130-185",
+      "component": "aiops-k8s-07",
+      "score": 5.455106874548068
+    },
+    {
+      "case": "97d37c35-186",
+      "component": "adservice",
+      "score": 7.100589852251588
+    },
+    {
+      "case": "9b0d8a50-187",
+      "component": "cartservice",
+      "score": 13.140765784874949
+    },
+    {
+      "case": "7e03b07d-188",
+      "component": "adservice",
+      "score": 7.764552566955443
+    },
+    {
+      "case": "96e4b852-189",
+      "component": "recommendationservice",
+      "score": 17.81019933344599
+    },
+    {
+      "case": "7513dbaf-190",
+      "component": "adservice",
+      "score": 8.393957783617026
+    },
+    {
+      "case": "c9832b3e-191",
+      "component": "adservice",
+      "score": 7.35012131995024
+    },
+    {
+      "case": "e55fb1cb-192",
+      "component": "adservice",
+      "score": 7.89891563115928
+    },
+    {
+      "case": "e4ef8a12-193",
+      "component": "adservice",
+      "score": 8.88345361506456
+    },
+    {
+      "case": "913e1ecf-194",
+      "component": "aiops-k8s-07",
+      "score": 8.608228252264665
+    },
+    {
+      "case": "7984364a-195",
+      "component": "adservice",
+      "score": 8.280001049255905
+    },
+    {
+      "case": "6a643823-196",
+      "component": "adservice",
+      "score": 8.180234632622154
+    },
+    {
+      "case": "de1d442d-197",
+      "component": "adservice",
+      "score": 8.144218788812138
+    },
+    {
+      "case": "4229b9c5-198",
+      "component": "adservice",
+      "score": 8.743432752778682
+    },
+    {
+      "case": "ff15d32c-199",
+      "component": "adservice",
+      "score": 8.63956444742497
+    },
+    {
+      "case": "5c8eb611-200",
+      "component": "adservice",
+      "score": 9.418242617738997
+    },
+    {
+      "case": "40424656-201",
+      "component": "adservice",
+      "score": 8.858841965603185
+    },
+    {
+      "case": "a499f40d-202",
+      "component": "adservice",
+      "score": 7.793083657664716
+    },
+    {
+      "case": "e25d2429-203",
+      "component": "adservice",
+      "score": 15.772936464401145
+    },
+    {
+      "case": "eb79e778-204",
+      "component": "adservice",
+      "score": 8.800387644879079
+    },
+    {
+      "case": "7f595b45-181",
+      "component": "adservice",
+      "score": 4.368610010625255
+    },
+    {
+      "case": "eb0c4ea8-182",
+      "component": "adservice",
+      "score": 5.449664388118083
+    },
+    {
+      "case": "d3dd6ed7-183",
+      "component": "aiops-k8s-08",
+      "score": 5.68661278866073
+    },
+    {
+      "case": "fb327034-184",
+      "component": "adservice",
+      "score": 5.432919754367748
+    },
+    {
+      "case": "1fbef130-185",
+      "component": "aiops-k8s-07",
+      "score": 5.455106874548068
+    },
+    {
+      "case": "97d37c35-186",
+      "component": "adservice",
+      "score": 7.100589852251588
+    },
+    {
+      "case": "9b0d8a50-187",
+      "component": "cartservice",
+      "score": 13.140765784874949
+    },
+    {
+      "case": "7e03b07d-188",
+      "component": "adservice",
+      "score": 7.764552566955443
+    },
+    {
+      "case": "96e4b852-189",
+      "component": "recommendationservice",
+      "score": 17.81019933344599
+    },
+    {
+      "case": "7513dbaf-190",
+      "component": "adservice",
+      "score": 8.393957783617026
+    },
+    {
+      "case": "c9832b3e-191",
+      "component": "adservice",
+      "score": 7.35012131995024
+    },
+    {
+      "case": "e55fb1cb-192",
+      "component": "adservice",
+      "score": 7.89891563115928
+    },
+    {
+      "case": "e4ef8a12-193",
+      "component": "adservice",
+      "score": 8.88345361506456
+    },
+    {
+      "case": "913e1ecf-194",
+      "component": "aiops-k8s-07",
+      "score": 8.608228252264665
+    },
+    {
+      "case": "7984364a-195",
+      "component": "adservice",
+      "score": 8.280001049255905
+    },
+    {
+      "case": "6a643823-196",
+      "component": "adservice",
+      "score": 8.180234632622154
+    },
+    {
+      "case": "de1d442d-197",
+      "component": "adservice",
+      "score": 8.144218788812138
+    },
+    {
+      "case": "4229b9c5-198",
+      "component": "adservice",
+      "score": 8.743432752778682
+    },
+    {
+      "case": "ff15d32c-199",
+      "component": "adservice",
+      "score": 8.63956444742497
+    },
+    {
+      "case": "5c8eb611-200",
+      "component": "adservice",
+      "score": 9.418242617738997
+    },
+    {
+      "case": "40424656-201",
+      "component": "adservice",
+      "score": 8.858841965603185
+    },
+    {
+      "case": "a499f40d-202",
+      "component": "adservice",
+      "score": 7.793083657664716
+    },
+    {
+      "case": "e25d2429-203",
+      "component": "adservice",
+      "score": 15.772936464401145
+    },
+    {
+      "case": "eb79e778-204",
+      "component": "adservice",
+      "score": 8.800387644879079
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.464338979464252
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 9.140328437013657
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 7.912811458477794
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.33674111936418
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.607871114712356
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 10.760041928454411
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.549837727258275
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 8.077976817480739
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 8.159719914025981
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.265375124852467
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 8.169223987744026
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 8.353890452644357
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 9.978760809272075
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 8.452962294375286
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 7.935403292135472
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 6.85035086274286
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 7.5027744653206545
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.523841716151754
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.05335318261775
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 9.106202206449222
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.362968828146794
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 8.95979451318392
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 8.33545092157917
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.42942306975593
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.393403215925597
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 9.076215004687565
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 7.458952700357244
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.594309119984755
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 8.549224668391926
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 6.902276926079618
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 8.886376950705888
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 8.06894973655832
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 7.93364975219135
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.401285445151917
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 8.174735913433608
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 7.179355248628125
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 7.834902017325824
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 7.7303234157490195
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.033255083958573
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.167290082615348
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.729106203896766
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.477114404187729
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 15.319108839160887
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 10.995313165859319
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 8.280030899407524
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.403417880746806
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.558613997419686
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.542627943739841
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 10.99577371518043
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.473890144875673
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.35057922502314
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "aiops-k8s-03",
+      "score": 8.334417345212723
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 8.055892584381546
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.460172968578481
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 8.663890492457616
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.212719979495521
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 8.058798321505098
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 8.187028312157189
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 9.319294028763768
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 8.101104212952796
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 8.427594039455862
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 11.792304973916272
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.132382841481213
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 7.025916609696639
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 7.449484385705024
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.605167156017348
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.332375084176787
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 10.3460476370688
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.20030751248564
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 8.688677961321218
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 8.681604802639598
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.235351847690879
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.621088039005715
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 9.11465022805945
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 7.481970679340847
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.677141329485853
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 8.617349685519113
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 7.330241006610825
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "checkoutservice",
+      "score": 6.9275314913052375
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 7.678192423198115
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 7.937821544320409
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.23588201248197
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 7.92370357868089
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 6.874662995328411
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 7.943957348625341
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "aiops-k8s-07",
+      "score": 7.607074687713032
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.065322642843959
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.201071223694524
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 14.333989826383888
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 9.505424848114128
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 15.085808314856562
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 10.511377702565705
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 9.099733177249462
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 9.644131163654752
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 9.587252287268807
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.799051781919207
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 12.374048217722573
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 9.832313386347016
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 11.238749705385807
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "aiops-k8s-07",
+      "score": 10.671946150983857
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 9.28967334010285
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 11.340786854036741
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 10.607635888233776
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 9.505181393580337
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 9.394607585905629
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 9.60697402054101
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 11.475574930662885
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 9.720906638531579
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 9.125713785955792
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 12.153834828551341
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 17.25506781059575
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 7.877903492154289
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 8.628190635118752
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 17.852417973574514
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "aiops-k8s-03",
+      "score": 10.50467619795778
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "aiops-k8s-07",
+      "score": 10.726873203624788
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 10.767414152368813
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 10.303763690161508
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 9.585768559816044
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 11.993836530219319
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "aiops-k8s-07",
+      "score": 9.926803319590732
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 10.437647255390699
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "aiops-k8s-07",
+      "score": 8.95277132120178
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 7.5834554879824685
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "aiops-k8s-04",
+      "score": 10.98246357786657
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 8.972960003903504
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 10.21933349331177
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 9.279292197042068
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 9.123697215020051
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 10.811478261924703
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 9.400946300448648
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 8.256258535922344
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 9.010137319924697
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "aiops-k8s-07",
+      "score": 9.853103911400853
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.033255083958573
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.167290082615348
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.571821554225894
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 18.365331861564513
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 12.796459811819119
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 11.07793604186891
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 11.740681416623175
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.671437567109853
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 15.064058699836174
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.969772818161585
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 11.68625164582041
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 11.309167544473034
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 11.18846035120746
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 10.707035420896817
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.571525174793454
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 11.436913582841637
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 11.6954466337021
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 13.970265132980904
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 11.8341472121254
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 11.10956460898966
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 11.169671401767518
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 8.905456121565718
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 10.503884251448916
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 21.733378402612455
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 12.674694455664849
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.748683089028912
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.10815635940551
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 12.543712318457487
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.669631290210837
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 11.746033881972528
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 11.750764502295834
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 12.70670100656259
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 10.442533780500142
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.572601855980183
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 11.968914535748695
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 9.234139709594047
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 12.440927730988243
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 11.296529631181647
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 11.10710965306789
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.161799623212683
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 11.44463027880705
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 10.051097348079374
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 10.968862824256153
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 10.822452782048629
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.446557117542001
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.234206115661486
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.571821554225894
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 18.365331861564513
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 12.796459811819119
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 11.07793604186891
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 11.740681416623175
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.671437567109853
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 15.064058699836174
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.969772818161585
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 11.68625164582041
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 11.309167544473034
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 11.18846035120746
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 10.707035420896817
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.571525174793454
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 11.436913582841637
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 11.6954466337021
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 13.970265132980904
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 11.8341472121254
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 11.10956460898966
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 11.169671401767518
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 8.905456121565718
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 10.503884251448916
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 21.733378402612455
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 12.674694455664849
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.748683089028912
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.10815635940551
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 12.543712318457487
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.669631290210837
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 11.746033881972528
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 11.750764502295834
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 12.70670100656259
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 10.442533780500142
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.572601855980183
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 11.968914535748695
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 9.234139709594047
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 12.440927730988243
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 11.296529631181647
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 11.10710965306789
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.161799623212683
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 11.44463027880705
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 10.051097348079374
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 10.968862824256153
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 10.822452782048629
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.446557117542001
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.234206115661486
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.464338979464252
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.265586824447068
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 13.118094186831794
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 9.140328437013657
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 7.912811458477794
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.386201011873698
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 8.33674111936418
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.607871114712356
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 10.760041928454411
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.549837727258275
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 8.347322604157437
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 8.077976817480739
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 8.159719914025981
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.265375124852467
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 8.169223987744026
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 8.353890452644357
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 9.978760809272075
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 8.452962294375286
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 7.935403292135472
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 6.85035086274286
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 7.5027744653206545
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.523841716151754
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.05335318261775
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 9.106202206449222
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.362968828146794
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 8.95979451318392
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 8.33545092157917
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.42942306975593
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.393403215925597
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 9.076215004687565
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 7.458952700357244
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.594309119984755
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 8.549224668391926
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 6.902276926079618
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 8.886376950705888
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 8.06894973655832
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 7.93364975219135
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.401285445151917
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 8.174735913433608
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 7.179355248628125
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 7.834902017325824
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 7.7303234157490195
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 6.033255083958573
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.167290082615348
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.897758307562377
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.465884397127361
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 23.04679487177875
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 14.230099097693483
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 10.662444759352493
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 12.058841973821984
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.014246552000756
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.357157287647368
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 16.273040699459514
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.957983172804735
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "checkoutservice",
+      "score": 9.714143346726669
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 14.805332328376812
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 14.08890378093604
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 10.688554797987933
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 12.1204404317231
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.816870477783834
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 14.196271184149754
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 13.703568842591022
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 15.601489193276882
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 13.50053841454512
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 14.503576348152892
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 13.555434650595117
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.460401803225137
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "recommendationservice",
+      "score": 9.306518216965504
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 13.961688707500512
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 22.207974795741404
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 13.682866164317389
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.933712029317295
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.664167815136036
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 13.540408644353437
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.77097238501409
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 12.11851538932084
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 12.194368525720266
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 14.89280966836182
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 13.146085692975717
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.708120235823166
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 12.775768589619334
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 12.904171686034456
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 15.018466469356262
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 12.456538772620974
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 14.400112219768538
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.3062717237819
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 16.45428753942365
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 15.919008272117427
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 12.06442483657683
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 12.370047198155358
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.086467630039108
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.420287243138975
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.897758307562377
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.465884397127361
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 23.04679487177875
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 14.230099097693483
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 10.662444759352493
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 12.058841973821984
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.014246552000756
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.357157287647368
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 16.273040699459514
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.957983172804735
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "checkoutservice",
+      "score": 9.714143346726669
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 14.805332328376812
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 14.08890378093604
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 10.688554797987933
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 12.1204404317231
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.816870477783834
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 14.196271184149754
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 13.703568842591022
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 15.601489193276882
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 13.50053841454512
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 14.503576348152892
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 13.555434650595117
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.460401803225137
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "recommendationservice",
+      "score": 9.306518216965504
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 13.961688707500512
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 22.207974795741404
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 13.682866164317389
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.933712029317295
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.664167815136036
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 13.540408644353437
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.77097238501409
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 12.11851538932084
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 12.194368525720266
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 14.89280966836182
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 13.146085692975717
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.708120235823166
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 12.775768589619334
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 12.904171686034456
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 15.018466469356262
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 12.456538772620974
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 14.400112219768538
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.3062717237819
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 16.45428753942365
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 15.919008272117427
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 12.06442483657683
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 12.370047198155358
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.086467630039108
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.420287243138975
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.634325734147614
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 8.189917426519543
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 16.46199633698482
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 10.164356498352488
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "cartservice",
+      "score": 7.74374293872376
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 8.613458552729988
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 7.867318965714827
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.870142988770336
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 11.62360049961394
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 8.541416552003383
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 10.575237377412009
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 10.0635027006686
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 8.657457451230787
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 8.440621769845595
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 10.140193702964112
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 9.788263458993587
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 11.14392085234063
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 9.643241724675086
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 10.35969739153778
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 12.302892744786082
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.460401803225137
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "cartservice",
+      "score": 7.780513677905939
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 9.972634791071794
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 15.86283913981529
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 9.773475831655277
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 9.23836573522664
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 9.760119867954312
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 9.671720460252455
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "cartservice",
+      "score": 8.866006406528737
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 11.52726271008988
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 8.710263232657333
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 10.637721191687016
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 9.390061209268369
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "cartservice",
+      "score": 7.094621200389975
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 9.125548992585239
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 9.217265490024612
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 10.727476049540188
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 8.897527694729266
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 10.285794442691813
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 9.504479802701358
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 11.753062528159749
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 11.370720194369593
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 8.617446311840594
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 8.835747998682399
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 5.776048307170791
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 5.3002051736706965
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.571821554225894
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 18.365331861564513
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 12.796459811819119
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 11.07793604186891
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 11.740681416623175
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.671437567109853
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 15.064058699836174
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.969772818161585
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 11.68625164582041
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 11.309167544473034
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 11.18846035120746
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 10.707035420896817
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.571525174793454
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 11.436913582841637
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 11.6954466337021
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 13.970265132980904
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 11.8341472121254
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 11.10956460898966
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 11.169671401767518
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 8.905456121565718
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 10.503884251448916
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 21.733378402612455
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 12.674694455664849
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.748683089028912
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.10815635940551
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 12.543712318457487
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.669631290210837
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 11.746033881972528
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 11.750764502295834
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 12.70670100656259
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 10.442533780500142
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.572601855980183
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 11.968914535748695
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 9.234139709594047
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 12.440927730988243
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 11.296529631181647
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 11.10710965306789
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.161799623212683
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 11.44463027880705
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 10.051097348079374
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 10.968862824256153
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 10.822452782048629
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.446557117542001
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.234206115661486
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.571821554225894
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 18.365331861564513
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 12.796459811819119
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 11.07793604186891
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 11.740681416623175
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.671437567109853
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 15.064058699836174
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.969772818161585
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 11.68625164582041
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 11.309167544473034
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 11.18846035120746
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 10.707035420896817
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.571525174793454
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 11.436913582841637
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 11.6954466337021
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 13.970265132980904
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "adservice",
+      "score": 11.8341472121254
+    },
+    {
+      "case": "725d8034-130",
+      "component": "adservice",
+      "score": 11.10956460898966
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "adservice",
+      "score": 11.169671401767518
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 8.905456121565718
+    },
+    {
+      "case": "36937f85-134",
+      "component": "adservice",
+      "score": 10.503884251448916
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 21.733378402612455
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "adservice",
+      "score": 12.674694455664849
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "adservice",
+      "score": 12.748683089028912
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "adservice",
+      "score": 13.10815635940551
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "adservice",
+      "score": 12.543712318457487
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "adservice",
+      "score": 11.669631290210837
+    },
+    {
+      "case": "5b520645-141",
+      "component": "adservice",
+      "score": 11.746033881972528
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "adservice",
+      "score": 11.750764502295834
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "adservice",
+      "score": 12.70670100656259
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "adservice",
+      "score": 10.442533780500142
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.572601855980183
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "adservice",
+      "score": 11.968914535748695
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "adservice",
+      "score": 9.234139709594047
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "adservice",
+      "score": 12.440927730988243
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "adservice",
+      "score": 11.296529631181647
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "adservice",
+      "score": 11.10710965306789
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "adservice",
+      "score": 13.161799623212683
+    },
+    {
+      "case": "eba76009-152",
+      "component": "adservice",
+      "score": 11.44463027880705
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "adservice",
+      "score": 10.051097348079374
+    },
+    {
+      "case": "05b57997-154",
+      "component": "adservice",
+      "score": 10.968862824256153
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "adservice",
+      "score": 10.822452782048629
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 8.446557117542001
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 7.234206115661486
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "adservice",
+      "score": 11.571821554225894
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 18.365331861564513
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "adservice",
+      "score": 12.796459811819119
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "adservice",
+      "score": 11.07793604186891
+    },
+    {
+      "case": "541f72de-115",
+      "component": "adservice",
+      "score": 11.740681416623175
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "adservice",
+      "score": 11.671437567109853
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 15.064058699836174
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "adservice",
+      "score": 11.969772818161585
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "adservice",
+      "score": 11.68625164582041
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "adservice",
+      "score": 11.309167544473034
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "adservice",
+      "score": 11.18846035120746
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "adservice",
+      "score": 10.707035420896817
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "adservice",
+      "score": 11.571525174793454
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "adservice",
+      "score": 11.436913582841637
+    },
+    {
+      "case": "8d818070-127",
+      "component": "adservice",
+      "score": 11.6954466337021
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "adservice",
+      "score": 13.970265132980904
     }
   ],
   "component_stats": {

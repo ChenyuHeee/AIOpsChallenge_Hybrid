@@ -4,10 +4,15 @@
 
 ## 仓库内容
 - `contest_solution/`：全量流水线（规划、专家、共识、推理、校验）
-- `submissions_phase1.jsonl`、`submissions_phase2.jsonl`、`submissions_2025-06-07.jsonl`：示例输出
-- `ground_truth_sample.jsonl`、`submissions_sample.jsonl`：小样本校验文件
+- `outputs/submissions/`：生成的 submission 输出（包含 phase1/phase2 与实验版本）
+- `outputs/reports/`：评测报告（judge 输出 JSON）
+- `samples/`：小样本校验文件
 - `.env`：LLM 密钥与端点（不纳入版本控制）
 - 📑 参考映射：[`reference/REFERENCE_NOTES.md`](reference/REFERENCE_NOTES.md)
+
+生成过程中的中间文件：
+- `tmp/filtered/`：为子集评测过滤出的 ground truth / submission
+- `tmp_cv/`：交叉验证输出（每折 submission、过滤后的 gt/metadata）
 
 ## 快速开始
 ```bash

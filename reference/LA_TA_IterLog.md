@@ -123,6 +123,8 @@ python -m AIOpsChallenge_Hybrid.contest_solution.main \
 
 （仓库里已有示例过滤产物：`tmp_gt_pad15_24*.jsonl` 与 `tmp_sub_pad15_24*.jsonl`）
 
+注：这些过滤产物现已收纳到 `AIOpsChallenge_Hybrid/tmp/filtered/` 下。
+
 ```bash
 python AIOpsChallengeJudge/evaluate.py \
   -g AIOpsChallenge_Hybrid/tmp_gt_pad15_24_deepseek_t60.jsonl \

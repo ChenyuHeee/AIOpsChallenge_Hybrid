@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import os
 import re
 from dataclasses import dataclass
 from typing import Dict, List
@@ -130,7 +131,11 @@ class MetricSpecialist:
         if re.fullmatch(r"aiops-k8s-\d+", cleaned) or re.fullmatch(r"k8s-master\d+", cleaned):
             return cleaned
 
-        if "->" not in cleaned:
+        # Replica suffix handling:
+        # Some GT components include replica ids like "adservice-0". Stripping the suffix can
+        # cause systematic LA loss. Keep legacy behavior by default but allow disabling.
+        strip_replica = os.getenv("RCA_STRIP_REPLICA_SUFFIX", "1") not in {"0", "false", "False"}
+        if strip_replica and "->" not in cleaned:
             parts = cleaned.rsplit("-", 1)
             if len(parts) == 2 and parts[1].isdigit():
                 cleaned = parts[0]
