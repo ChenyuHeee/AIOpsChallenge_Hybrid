@@ -47,7 +47,18 @@ class Candidate:
 @dataclass(frozen=True)
 class CandidateResult:
     candidate: Candidate
-    per_date: Dict[str, Dict[str, float]]
+    per_date: Dict[str, Dict[str, Any]]
+
+
+def _top_components(path: Path, *, k: int = 5) -> List[tuple[str, int]]:
+    counts: Dict[str, int] = {}
+    for row in _read_jsonl(path):
+        component = str(row.get("component", "") or "").strip()
+        if not component:
+            component = "(empty)"
+        counts[component] = counts.get(component, 0) + 1
+    ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+    return ranked[:k]
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -62,8 +73,19 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "--preset",
         type=str,
         default="final_grid_v1",
-        choices=["final_grid_v1", "bias_fix_v1", "bias_fix_v1_hint_grid"],
-        help="候选方案预设：final_grid_v1 / bias_fix_v1 / bias_fix_v1_hint_grid",
+        choices=[
+            "final_grid_v1",
+            "bias_fix_v1",
+            "bias_fix_v1_hint_grid",
+            "collapse_diag_v1",
+            "la_boost_v1",
+            "la_boost_v2_edge_replica",
+            "la_boost_v3_node_boost",
+            "la_boost_v7_node_metric_dominance",
+            "la_boost_v5_node_strong_override",
+            "la_boost_v6_prior_off",
+        ],
+        help="候选方案预设：final_grid_v1 / bias_fix_v1 / bias_fix_v1_hint_grid / collapse_diag_v1 / la_boost_v1 / la_boost_v2_edge_replica / la_boost_v3_node_boost / la_boost_v7_node_metric_dominance / la_boost_v5_node_strong_override / la_boost_v6_prior_off",
     )
     p.add_argument(
         "--output-report",
@@ -296,6 +318,377 @@ def build_candidates(preset: str) -> List[Candidate]:
 
         return candidates
 
+    if preset == "collapse_diag_v1":
+        # 诊断“component 向 adservice 坍缩”的来源：
+        # - 是先验/回退导致？
+        # - 是记忆文件里的 legacy success-rate 影响？
+        # - 是某个 specialist（尤其 traces/logs）过强导致？
+        #
+        # 设计原则：尽量只动 component 选择相关参数，便于解释 LA 变化。
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+        }
+
+        return [
+            Candidate(
+                key="base_p20",
+                name="方案A：基线（对照）",
+                env={
+                    **base_env,
+                },
+            ),
+            Candidate(
+                key="no_prior",
+                name="方案B：关闭 component 先验（scale=0）",
+                env={
+                    **base_env,
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.0",
+                },
+            ),
+            Candidate(
+                key="mem_clean",
+                name="方案C：隔离记忆文件（避免 legacy component_success 影响）",
+                env={
+                    **base_env,
+                    "RCA_MEMORY_PATH": ".aiops_memory.clean.json",
+                },
+            ),
+            Candidate(
+                key="no_prior_mem_clean",
+                name="方案D：关闭先验 + 隔离记忆文件",
+                env={
+                    **base_env,
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.0",
+                    "RCA_MEMORY_PATH": ".aiops_memory.clean.json",
+                },
+            ),
+            Candidate(
+                key="trace_down",
+                name="方案E：下调 Trace 权重（避免 trace 噪声主导）",
+                env={
+                    **base_env,
+                    "RCA_WEIGHT_TRACE": "1.10",
+                },
+            ),
+            Candidate(
+                key="trace_down_no_prior",
+                name="方案F：下调 Trace 权重 + 关闭先验",
+                env={
+                    **base_env,
+                    "RCA_WEIGHT_TRACE": "1.10",
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.0",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v1":
+        # Target: improve LA by addressing collapse root causes.
+        # - Disable legacy memory (component_success) which can create feedback collapse.
+        # - Allow hints to seed candidate list / guide fallback, so query-mentioned components
+        #   can be selected even when telemetry evidence is sparse.
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+            # Important: keep legacy memory OFF (new default), but we also set it explicitly.
+            "RCA_USE_LEGACY_MEMORY": "0",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：基线（禁用 legacy 记忆，作为新对照）",
+                env={
+                    **base_env,
+                },
+            ),
+            Candidate(
+                key="hint_seed",
+                name="方案B：hints 注入候选（seed=0.15）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_HINT_SEED": "1",
+                    "RCA_HINT_SEED_SCORE": "0.15",
+                },
+            ),
+            Candidate(
+                key="hint_seed_fb",
+                name="方案C：hints 注入 + 回退优先 hints",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_HINT_SEED": "1",
+                    "RCA_HINT_SEED_SCORE": "0.15",
+                    "RCA_FALLBACK_PREFER_HINTS": "1",
+                },
+            ),
+            Candidate(
+                key="hint_seed_fb_p07",
+                name="方案D：hints 注入+回退优先 hints + 轻先验衰减（scale=0.7）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_HINT_SEED": "1",
+                    "RCA_HINT_SEED_SCORE": "0.15",
+                    "RCA_FALLBACK_PREFER_HINTS": "1",
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.7",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v2_edge_replica":
+        # Target: improve LA for edge components (a->b) and replica-suffixed services (xxx-2).
+        # - Enable graph edge hypotheses (RCA_ENABLE_EDGE_COMPONENTS)
+        # - Optionally keep replica suffix (RCA_STRIP_REPLICA_SUFFIX=0)
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：对照（legacy off, strip replica=1, edge off）",
+                env={
+                    **base_env,
+                    "RCA_STRIP_REPLICA_SUFFIX": "1",
+                    "RCA_ENABLE_EDGE_COMPONENTS": "0",
+                },
+            ),
+            Candidate(
+                key="keep_replica",
+                name="方案B：保留 replica 后缀（edge off）",
+                env={
+                    **base_env,
+                    "RCA_STRIP_REPLICA_SUFFIX": "0",
+                    "RCA_ENABLE_EDGE_COMPONENTS": "0",
+                },
+            ),
+            Candidate(
+                key="edge_on",
+                name="方案C：开启 edge 组件候选（strip replica=1）",
+                env={
+                    **base_env,
+                    "RCA_STRIP_REPLICA_SUFFIX": "1",
+                    "RCA_ENABLE_EDGE_COMPONENTS": "1",
+                    "RCA_EDGE_TOPK": "3",
+                },
+            ),
+            Candidate(
+                key="edge_on_keep_replica",
+                name="方案D：开启 edge 候选 + 保留 replica 后缀",
+                env={
+                    **base_env,
+                    "RCA_STRIP_REPLICA_SUFFIX": "0",
+                    "RCA_ENABLE_EDGE_COMPONENTS": "1",
+                    "RCA_EDGE_TOPK": "3",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v3_node_boost":
+        # Target: improve LA when GT is a node (aiops-k8s-xx) by enabling node-fault boosting.
+        # We compare strict (metrics+traces) vs relaxed (metrics-only) triggering.
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：对照（node boost 关闭）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_BOOST": "0",
+                },
+            ),
+            Candidate(
+                key="node_boost_strict",
+                name="方案B：node boost（严格：metrics+traces 同时支持）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_BOOST": "1",
+                    "RCA_NODE_BOOST_REQUIRE_TRACES": "1",
+                },
+            ),
+            Candidate(
+                key="node_boost_metrics",
+                name="方案C：node boost（放宽：metrics-only 也可触发）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_BOOST": "1",
+                    "RCA_NODE_BOOST_REQUIRE_TRACES": "0",
+                },
+            ),
+            Candidate(
+                key="node_boost_metrics_keep_replica",
+                name="方案D：node boost（metrics-only）+ 保留 replica 后缀",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_BOOST": "1",
+                    "RCA_NODE_BOOST_REQUIRE_TRACES": "0",
+                    "RCA_STRIP_REPLICA_SUFFIX": "0",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v5_node_strong_override":
+        # Target: improve LA for node-root-cause cases by preferring nodes when
+        # node_cpu/node_memory metrics show extremely strong anomalies.
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+            # Avoid long hangs when no LLM credentials/network are available.
+            "RCA_DISABLE_LLM": "1",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：对照（strong override 关闭）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_STRONG_OVERRIDE": "0",
+                },
+            ),
+            Candidate(
+                key="node_strong_on",
+                name="方案B：开启 strong node override（score>=6 优先 node）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_STRONG_OVERRIDE": "1",
+                    "RCA_NODE_STRONG_SCORE": "6.0",
+                    "RCA_NODE_STRONG_MARGIN": "0.08",
+                },
+            ),
+            Candidate(
+                key="node_strong_on_keep_replica",
+                name="方案C：strong override + 保留 replica 后缀",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_STRONG_OVERRIDE": "1",
+                    "RCA_NODE_STRONG_SCORE": "6.0",
+                    "RCA_NODE_STRONG_MARGIN": "0.08",
+                    "RCA_STRIP_REPLICA_SUFFIX": "0",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v7_node_metric_dominance":
+        # Target: make strong node CPU/memory metric evidence win when node score is already
+        # competitive with the top non-node candidate (safer than blanket node boosting).
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+            # Phase2: TiDB (tidb-*) is a major domain; allow metrics-driven promotion when strong.
+            "RCA_ENABLE_TIDB_METRIC_DOMINANCE_OVERRIDE": "1",
+            "RCA_TIDB_DOMINANCE_MIN_METRIC": "2.6",
+            "RCA_TIDB_DOMINANCE_MIN_RATIO": "0.55",
+            "RCA_TIDB_DOMINANCE_MARGIN": "0.02",
+            "RCA_TIDB_METRIC_SCORE_MULT": "1.8",
+            # Avoid long hangs when no LLM credentials/network are available.
+            "RCA_DISABLE_LLM": "1",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：对照（dominance override 关闭）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE": "0",
+                },
+            ),
+            Candidate(
+                key="node_dominance_on",
+                name="方案B：开启 node metric dominance override（强 node 指标 + 竞争力阈值）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE": "1",
+                    "RCA_NODE_DOMINANCE_MIN_METRIC": "5.2",
+                    "RCA_NODE_DOMINANCE_MIN_RATIO": "0.6",
+                    "RCA_NODE_DOMINANCE_MARGIN": "0.03",
+                },
+            ),
+            Candidate(
+                key="node_dominance_on_keep_replica",
+                name="方案C：dominance override + 保留 replica 后缀",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE": "1",
+                    "RCA_NODE_DOMINANCE_MIN_METRIC": "5.2",
+                    "RCA_NODE_DOMINANCE_MIN_RATIO": "0.6",
+                    "RCA_NODE_DOMINANCE_MARGIN": "0.03",
+                    "RCA_STRIP_REPLICA_SUFFIX": "0",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v6_prior_off":
+        # Target: remove service popularity prior that suppresses node/replica components.
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+            "RCA_STRIP_REPLICA_SUFFIX": "1",
+            "RCA_DISABLE_LLM": "1",
+        }
+
+        return [
+            Candidate(
+                key="prior_on",
+                name="方案A：对照（prior scale=1.0）",
+                env={
+                    **base_env,
+                    "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+                },
+            ),
+            Candidate(
+                key="prior_off",
+                name="方案B：关闭 prior（scale=0.0）",
+                env={
+                    **base_env,
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.0",
+                },
+            ),
+            Candidate(
+                key="prior_light",
+                name="方案C：弱 prior（scale=0.3）",
+                env={
+                    **base_env,
+                    "RCA_COMPONENT_PRIOR_SCALE": "0.3",
+                },
+            ),
+        ]
+
     raise ValueError(f"Unknown preset: {preset}")
 
 
@@ -375,6 +768,22 @@ def render_report(
             )
 
     lines.append("")
+    lines.append("## 预测 component 分布（Top-5）")
+    lines.append("")
+    lines.append("说明：该表用于快速观察是否出现 ‘adservice 坍缩’（例如 Top-1 占比异常高）。")
+    lines.append("")
+    lines.append("| date | 方案key | Top-5 components（component:count） |")
+    lines.append("|---|---|---|")
+    for date in dates:
+        for r in results:
+            m = r.per_date.get(date)
+            if not m:
+                continue
+            top_items = m.get("_top_components") or []
+            rendered = "; ".join([f"{c}:{n}" for c, n in top_items])
+            lines.append(f"| {date} | {r.candidate.key} | {rendered} |")
+
+    lines.append("")
     lines.append("## 产物路径")
     lines.append(f"- submissions: `outputs/experiments/{suite_slug}/`")
     lines.append("- filtered gt: `tmp/filtered/` (gt_YYYY-MM-DD_*.jsonl)")
@@ -405,7 +814,7 @@ def main(argv: Sequence[str]) -> int:
     gt_all = _read_jsonl(args.ground_truth)
 
     for candidate in candidates:
-        per_date: Dict[str, Dict[str, float]] = {}
+        per_date: Dict[str, Dict[str, Any]] = {}
         for date in args.dates:
             subset = df[df["date"].astype(str).str.strip() == str(date).strip()].copy()
             if subset.empty:
@@ -425,8 +834,10 @@ def main(argv: Sequence[str]) -> int:
             env.update({k: str(v) for k, v in candidate.env.items()})
 
             _run_generator(args.telemetry_root, meta_path, submission_path, env)
-            metrics = _evaluate_with_judge(filtered_gt, submission_path)
+            raw_metrics = _evaluate_with_judge(filtered_gt, submission_path)
+            metrics: Dict[str, Any] = dict(raw_metrics)
             metrics["_n"] = float(len(subset))
+            metrics["_top_components"] = _top_components(submission_path, k=5)
             per_date[str(date).strip()] = metrics
 
         results.append(CandidateResult(candidate=candidate, per_date=per_date))

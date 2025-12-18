@@ -129,9 +129,10 @@ Respond with strict JSON having keys component, reason, analysis_steps.
     def _is_node_component(component: str) -> bool:
         """Detect infrastructure node identifiers."""
         return bool(component and (component.startswith("aiops-k8s-") or component.startswith("k8s-master")))
-        return prompt.strip()
 
     def _call_llm(self, prompt: str) -> str:
+        if os.getenv("RCA_DISABLE_LLM", "0") not in {"", "0", "false", "False"}:
+            return "{}"
         try:
             attempts = int(os.getenv("RCA_LLM_ATTEMPTS", "3"))
         except ValueError:

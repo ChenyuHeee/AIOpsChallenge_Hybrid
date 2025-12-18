@@ -27,8 +27,19 @@ class ConsensusOrchestrator:
         scores: Dict[str, float] = defaultdict(float)
         evidence: Dict[str, List[str]] = defaultdict(list)
         modality_support: Dict[str, set[str]] = defaultdict(set)
+
+        # Track strongest node CPU/memory metric evidence per node.
+        node_metric_max: Dict[str, float] = defaultdict(float)
+        # Track strongest TiDB metric evidence per tidb component (phase2 domain).
+        tidb_metric_max: Dict[str, float] = defaultdict(float)
         for hypothesis in hypotheses:
             weight = self._specialist_weight(hypothesis.source)
+            # Trace-derived node hints can be noisy; prefer metrics/logs for node identification.
+            if self._is_node(hypothesis.component) and hypothesis.source == "TraceSpecialist":
+                try:
+                    weight = float(os.getenv("RCA_WEIGHT_TRACE_NODE", "0.6"))
+                except ValueError:
+                    weight = 0.6
             reinforcement = self._memory_reward(hypothesis.component)
             prior = self._component_prior(hypothesis.component)
             final_score = hypothesis.confidence * weight * reinforcement * prior
@@ -37,11 +48,46 @@ class ConsensusOrchestrator:
                 evidence[hypothesis.component].append(f"[{item.modality}] {item.summary}")
                 modality_support[hypothesis.component].add(str(item.modality))
 
+                if (
+                    str(item.modality) == "metrics"
+                    and self._is_node(hypothesis.component)
+                    and ("node_memory" in (item.summary or "").lower() or "node_cpu" in (item.summary or "").lower())
+                ):
+                    try:
+                        node_metric_max[hypothesis.component] = max(node_metric_max[hypothesis.component], float(item.score))
+                    except Exception:
+                        pass
+
+                if str(item.modality) == "metrics" and self._is_tidb(hypothesis.component):
+                    try:
+                        tidb_metric_max[hypothesis.component] = max(tidb_metric_max[hypothesis.component], float(item.score))
+                    except Exception:
+                        pass
+
+            # Optional: seed hinted components into the candidate list.
+            # Motivation: hint bonus only affects existing candidates; when evidence is sparse,
+            # injecting low-confidence hinted candidates can prevent fallback-to-top-prior collapse.
+            self._seed_hints(scores, component_hints)
+
         # Node-fault aggregation heuristic:
         # If many services show anomalies in the window AND a node candidate has strong
         # metrics/traces evidence, boost the node score. This helps node-root-cause cases
         # where symptoms appear across multiple services.
         self._apply_node_fault_boost(scores, evidence)
+
+        # Optional: strong-node override.
+        # If a node has extremely strong node_cpu/node_memory metric evidence, prefer it
+        # over service candidates. Useful when true root cause is infra (node fault), while
+        # traces/logs only show downstream symptoms on services.
+        self._apply_node_strong_metric_override(scores, evidence)
+
+        # Optional: metric-dominance override (safer than blanket node boost).
+        # If a node has a very strong CPU/memory metric AND its score is already competitive
+        # with the best non-node candidate, promote it to the top.
+        self._apply_node_metric_dominance_override(scores, node_metric_max)
+
+        # Optional: TiDB dominance override (phase2) - only when TiDB metric evidence is strong.
+        self._apply_tidb_metric_dominance_override(scores, tidb_metric_max)
 
         # Optional: prefer components supported by multiple modalities.
         self._apply_multimodal_bonus(scores, modality_support)
@@ -51,10 +97,10 @@ class ConsensusOrchestrator:
 
         ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         if not ranked:
-            fallback_component = self._top_prior_component()
+            fallback_component = self._fallback_component(component_hints)
             ranked = [(fallback_component, self.component_priors.get(fallback_component, 0.0))]
         elif ranked[0][1] <= 0.0:
-            fallback_component = self._top_prior_component(preferred=list(scores.keys()))
+            fallback_component = self._fallback_component(component_hints, preferred=list(scores.keys()))
             ranked.insert(0, (fallback_component, self.component_priors.get(fallback_component, 0.0)))
         
         # Filter node candidates to top-2 by score to avoid LLM confusion (too many similar nodes).
@@ -119,6 +165,82 @@ class ConsensusOrchestrator:
             component.startswith("aiops-k8s-") or component.startswith("k8s-master")
         )
 
+    @staticmethod
+    def _is_tidb(component: str) -> bool:
+        return bool(component) and component.startswith("tidb-")
+
+    @classmethod
+    def _apply_tidb_metric_dominance_override(cls, scores: Dict[str, float], tidb_metric_max: Dict[str, float]) -> None:
+        if os.getenv("RCA_ENABLE_TIDB_METRIC_DOMINANCE_OVERRIDE", "0") in {"0", "false", "False"}:
+            return
+        tidb_items = [(c, s) for c, s in scores.items() if cls._is_tidb(c) and s > 0]
+        if not tidb_items:
+            return
+
+        top_tidb = max(tidb_items, key=lambda x: tidb_metric_max.get(x[0], 0.0))[0]
+        top_tidb_score = float(scores.get(top_tidb, 0.0))
+        top_tidb_metric = float(tidb_metric_max.get(top_tidb, 0.0))
+
+        try:
+            min_metric = float(os.getenv("RCA_TIDB_DOMINANCE_MIN_METRIC", "2.6"))
+        except ValueError:
+            min_metric = 2.6
+        if top_tidb_metric < min_metric:
+            return
+
+        non_tidb_best = max((s for c, s in scores.items() if not cls._is_tidb(c)), default=0.0)
+        if non_tidb_best <= 0:
+            return
+
+        try:
+            min_ratio = float(os.getenv("RCA_TIDB_DOMINANCE_MIN_RATIO", "0.7"))
+        except ValueError:
+            min_ratio = 0.7
+        min_ratio = max(0.0, min(1.0, min_ratio))
+        if top_tidb_score < non_tidb_best * min_ratio:
+            return
+
+        try:
+            margin = float(os.getenv("RCA_TIDB_DOMINANCE_MARGIN", "0.02"))
+        except ValueError:
+            margin = 0.02
+        margin = max(0.0, min(0.5, margin))
+
+        scores[top_tidb] = max(top_tidb_score, non_tidb_best * (1.0 + margin))
+
+    @classmethod
+    def _apply_node_strong_metric_override(cls, scores: Dict[str, float], evidence: Dict[str, List[str]]) -> None:
+        if os.getenv("RCA_ENABLE_NODE_STRONG_OVERRIDE", "0") in {"0", "false", "False"}:
+            return
+        node_items = [(c, s) for c, s in scores.items() if cls._is_node(c) and s > 0]
+        if not node_items:
+            return
+
+        top_node, node_score = max(node_items, key=lambda x: x[1])
+        ev = evidence.get(top_node) or []
+        # Require explicit node CPU/memory metric evidence to keep precision high.
+        has_strong_node_metric = any(
+            (line.startswith("[metrics]") and ("node_memory" in line.lower() or "node_cpu" in line.lower()))
+            for line in ev
+        )
+        if not has_strong_node_metric:
+            return
+        try:
+            strong_score = float(os.getenv("RCA_NODE_STRONG_SCORE", "6.0"))
+        except ValueError:
+            strong_score = 6.0
+        if node_score < strong_score:
+            return
+
+        non_node_best = max((s for c, s in scores.items() if not cls._is_node(c)), default=0.0)
+        try:
+            margin = float(os.getenv("RCA_NODE_STRONG_MARGIN", "0.08"))
+        except ValueError:
+            margin = 0.08
+        margin = max(0.0, min(0.5, margin))
+        target = max(node_score, non_node_best * (1.0 + margin))
+        scores[top_node] = target
+
     @classmethod
     def _apply_node_fault_boost(cls, scores: Dict[str, float], evidence: Dict[str, List[str]]) -> None:
         # Experimental heuristic. Keep it OFF by default because aggressive node boosting
@@ -137,6 +259,7 @@ class ConsensusOrchestrator:
 
         base_boost = float(os.getenv("RCA_NODE_BOOST", "0.35"))
         max_boost = float(os.getenv("RCA_NODE_BOOST_MAX", "0.9"))
+        require_traces = os.getenv("RCA_NODE_BOOST_REQUIRE_TRACES", "1") not in {"0", "false", "False"}
         scale = min(1.0, service_pressure / 6.0)
         boost = min(max_boost, base_boost * (1.0 + 0.8 * scale))
 
@@ -152,11 +275,56 @@ class ConsensusOrchestrator:
                     modalities.add("metrics")
                 elif line.startswith("[traces]"):
                     modalities.add("traces")
-            # Only boost when BOTH metrics and traces agree on the node.
-            # This keeps precision high; boosting on a single modality was observed to hurt LA.
-            if not ("metrics" in modalities and "traces" in modalities):
-                continue
+                elif line.startswith("[logs]"):
+                    modalities.add("logs")
+            # Default: require BOTH metrics and traces to agree.
+            # For node-focused datasets, allow relaxing to metrics-only via env.
+            if require_traces:
+                if not ("metrics" in modalities and "traces" in modalities):
+                    continue
+            else:
+                if not modalities:
+                    continue
             scores[component] *= (1.0 + boost)
+
+    @classmethod
+    def _apply_node_metric_dominance_override(cls, scores: Dict[str, float], node_metric_max: Dict[str, float]) -> None:
+        if os.getenv("RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE", "0") in {"0", "false", "False"}:
+            return
+        node_items = [(c, s) for c, s in scores.items() if cls._is_node(c) and s > 0]
+        if not node_items:
+            return
+
+        # Pick the node with the strongest CPU/memory metric evidence.
+        top_node = max(node_items, key=lambda x: node_metric_max.get(x[0], 0.0))[0]
+        top_node_score = float(scores.get(top_node, 0.0))
+        top_node_metric = float(node_metric_max.get(top_node, 0.0))
+
+        try:
+            min_metric = float(os.getenv("RCA_NODE_DOMINANCE_MIN_METRIC", "5.2"))
+        except ValueError:
+            min_metric = 5.2
+        if top_node_metric < min_metric:
+            return
+
+        non_node_best = max((s for c, s in scores.items() if not cls._is_node(c)), default=0.0)
+        if non_node_best <= 0:
+            return
+
+        try:
+            min_ratio = float(os.getenv("RCA_NODE_DOMINANCE_MIN_RATIO", "0.6"))
+        except ValueError:
+            min_ratio = 0.6
+        min_ratio = max(0.0, min(1.0, min_ratio))
+        if top_node_score < non_node_best * min_ratio:
+            return
+
+        try:
+            margin = float(os.getenv("RCA_NODE_DOMINANCE_MARGIN", "0.03"))
+        except ValueError:
+            margin = 0.03
+        margin = max(0.0, min(0.2, margin))
+        scores[top_node] = max(top_node_score, non_node_best * (1.0 + margin))
 
     def _specialist_weight(self, source: str) -> float:
         # Defaults chosen from empirical trials.
@@ -221,16 +389,59 @@ class ConsensusOrchestrator:
             return 0.9 + 0.2 * rate
 
         # Path B (legacy): component_success values already accumulated in memory.
-        legacy = self.memory.get("component_success")
-        if isinstance(legacy, dict) and component in legacy:
-            try:
-                success_rate = float(legacy.get(component, 0.5))
-            except Exception:
-                return 1.0
-            # Mild effect: 0.9 ~ 1.3 (keeps previous behavior helpful but less dominating)
-            return 0.9 + 0.8 * max(0.0, min(1.0, success_rate))
+        # IMPORTANT: legacy memory is OFF by default because it is easy to introduce
+        # positive-feedback collapse (e.g., adservice dominates predictions -> high success -> more dominance).
+        use_legacy = os.getenv("RCA_USE_LEGACY_MEMORY", "0") not in {"0", "false", "False"}
+        if use_legacy:
+            legacy = self.memory.get("component_success")
+            if isinstance(legacy, dict) and component in legacy:
+                try:
+                    success_rate = float(legacy.get(component, 0.5))
+                except Exception:
+                    return 1.0
+                # Mild effect: 0.9 ~ 1.3
+                rate = max(0.0, min(1.0, success_rate))
+                return 0.9 + 0.4 * rate
 
         return 1.0
+
+    @staticmethod
+    def _seed_hints(scores: Dict[str, float], component_hints: List[str] | None) -> None:
+        if os.getenv("RCA_ENABLE_HINT_SEED", "0") in {"0", "false", "False"}:
+            return
+        if not component_hints:
+            return
+        hints = [str(h).strip().lower() for h in component_hints if str(h).strip()]
+        if not hints:
+            return
+
+        try:
+            seed = float(os.getenv("RCA_HINT_SEED_SCORE", "0.15"))
+        except ValueError:
+            seed = 0.15
+        seed = max(0.0, min(2.0, seed))
+
+        # Ensure hinted components appear in candidate list with a small positive score.
+        # This score is intentionally weak; real evidence should still dominate.
+        for h in hints:
+            if h == "service":
+                continue
+            if scores.get(h, 0.0) > 0.0:
+                continue
+            scores[h] = max(scores.get(h, 0.0), seed)
+
+    def _fallback_component(self, component_hints: List[str] | None, preferred: List[str] | None = None) -> str:
+        prefer_hints = os.getenv("RCA_FALLBACK_PREFER_HINTS", "0") not in {"0", "false", "False"}
+        if prefer_hints and component_hints:
+            hinted = [str(h).strip().lower() for h in component_hints if str(h).strip()]
+            hinted = [h for h in hinted if h and h != "service"]
+            if hinted:
+                # Choose the highest-prior hinted component (if present in priors);
+                # otherwise fall back to generic top prior.
+                candidates = [h for h in hinted if h in self.component_priors]
+                if candidates:
+                    return self._top_prior_component(preferred=candidates)
+        return self._top_prior_component(preferred=preferred)
 
     def apply_component_feedback(self, case_id: str, predicted: str, gt_component: str) -> None:
         """Update memory using judge-style correctness feedback.

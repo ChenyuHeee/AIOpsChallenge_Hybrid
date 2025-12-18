@@ -1,0 +1,492 @@
+{
+  "component_priors": {
+    "adservice": 1.4,
+    "checkoutservice": 1.3,
+    "recommendationservice": 1.25,
+    "productcatalogservice": 1.2,
+    "frontend": 1.15,
+    "cartservice": 1.1
+  },
+  "history": [
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 13.710772877410678
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "checkoutservice",
+      "score": 8.268181876970132
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "adservice",
+      "score": 11.009774159456658
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "checkoutservice",
+      "score": 8.380807848374861
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "checkoutservice",
+      "score": 8.476279022698419
+    },
+    {
+      "case": "541f72de-115",
+      "component": "checkoutservice",
+      "score": 7.967905779690785
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "checkoutservice",
+      "score": 8.055157805705818
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 16.068658226183594
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "adservice",
+      "score": 9.03070445228894
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "checkoutservice",
+      "score": 7.926506353416976
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "checkoutservice",
+      "score": 8.705513758290436
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "checkoutservice",
+      "score": 8.310332608333479
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "checkoutservice",
+      "score": 9.022240243536647
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "checkoutservice",
+      "score": 8.981221628304706
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "checkoutservice",
+      "score": 8.878344933973452
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "checkoutservice",
+      "score": 8.611434515474553
+    },
+    {
+      "case": "8d818070-127",
+      "component": "checkoutservice",
+      "score": 8.969851368264287
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "checkoutservice",
+      "score": 8.698066887604014
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "checkoutservice",
+      "score": 8.383832670611765
+    },
+    {
+      "case": "725d8034-130",
+      "component": "checkoutservice",
+      "score": 8.02742215049636
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 8.905456121565718
+    },
+    {
+      "case": "36937f85-134",
+      "component": "checkoutservice",
+      "score": 8.121615607488742
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 13.028873626593548
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "checkoutservice",
+      "score": 9.425500791708847
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "checkoutservice",
+      "score": 8.337941196934162
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "checkoutservice",
+      "score": 8.310462435772902
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "checkoutservice",
+      "score": 8.197478612069428
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "checkoutservice",
+      "score": 8.280275624601094
+    },
+    {
+      "case": "5b520645-141",
+      "component": "checkoutservice",
+      "score": 10.534852848383672
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "checkoutservice",
+      "score": 8.255845429556137
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "checkoutservice",
+      "score": 8.376559157673334
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "checkoutservice",
+      "score": 8.731023310128865
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 8.572601855980183
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "checkoutservice",
+      "score": 9.036103594393307
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "checkoutservice",
+      "score": 8.878284859892426
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "checkoutservice",
+      "score": 8.742661088847507
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "checkoutservice",
+      "score": 8.66360094776735
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "checkoutservice",
+      "score": 8.837485489263713
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "checkoutservice",
+      "score": 8.885710266004612
+    },
+    {
+      "case": "eba76009-152",
+      "component": "checkoutservice",
+      "score": 8.794099052706978
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "checkoutservice",
+      "score": 8.425425783787226
+    },
+    {
+      "case": "05b57997-154",
+      "component": "checkoutservice",
+      "score": 7.600986299177532
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "aiops-k8s-07",
+      "score": 7.579310701077579
+    },
+    {
+      "case": "934844b2-156",
+      "component": "adservice",
+      "score": 5.063599557583306
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "adservice",
+      "score": 4.336811126352725
+    },
+    {
+      "case": "abb62970-110",
+      "component": "cartservice",
+      "score": 12.464338979464252
+    },
+    {
+      "case": "a54c75dc-111",
+      "component": "checkoutservice",
+      "score": 6.36013990536164
+    },
+    {
+      "case": "f48a6b60-112",
+      "component": "aiops-k8s-07",
+      "score": 8.474614575826372
+    },
+    {
+      "case": "dc62e30c-113",
+      "component": "aiops-k8s-03",
+      "score": 7.827361535708306
+    },
+    {
+      "case": "bc2f1dfa-114",
+      "component": "checkoutservice",
+      "score": 6.5202146328449375
+    },
+    {
+      "case": "541f72de-115",
+      "component": "cartservice",
+      "score": 6.166777721877465
+    },
+    {
+      "case": "e2750b43-116",
+      "component": "checkoutservice",
+      "score": 6.19627523515832
+    },
+    {
+      "case": "a363d826-117",
+      "component": "cartservice",
+      "score": 14.607871114712356
+    },
+    {
+      "case": "dc331a0b-118",
+      "component": "aiops-k8s-03",
+      "score": 7.669128694862229
+    },
+    {
+      "case": "f18b68cd-119",
+      "component": "cartservice",
+      "score": 6.378247091878459
+    },
+    {
+      "case": "a85d0720-120",
+      "component": "aiops-k8s-07",
+      "score": 8.645192081066005
+    },
+    {
+      "case": "66cfe1dd-121",
+      "component": "aiops-k8s-07",
+      "score": 8.209189346910659
+    },
+    {
+      "case": "8cf433b4-122",
+      "component": "checkoutservice",
+      "score": 6.392563544871906
+    },
+    {
+      "case": "bc454cd0-123",
+      "component": "aiops-k8s-07",
+      "score": 8.723682195412877
+    },
+    {
+      "case": "ad84546c-124",
+      "component": "aiops-k8s-07",
+      "score": 8.159719914025981
+    },
+    {
+      "case": "0fccdcad-125",
+      "component": "checkoutservice",
+      "score": 6.829496103056501
+    },
+    {
+      "case": "de4a919c-126",
+      "component": "checkoutservice",
+      "score": 6.624180396518888
+    },
+    {
+      "case": "8d818070-127",
+      "component": "checkoutservice",
+      "score": 6.899885667895606
+    },
+    {
+      "case": "c1e7d172-128",
+      "component": "checkoutservice",
+      "score": 6.690820682772317
+    },
+    {
+      "case": "343ba04c-129",
+      "component": "checkoutservice",
+      "score": 6.449102054316742
+    },
+    {
+      "case": "725d8034-130",
+      "component": "frontend",
+      "score": 6.916207373648492
+    },
+    {
+      "case": "08e3187d-131",
+      "component": "emailservice",
+      "score": 10.568552024827254
+    },
+    {
+      "case": "21aa302f-132",
+      "component": "shippingservice",
+      "score": 15.004406791822392
+    },
+    {
+      "case": "fc44280d-133",
+      "component": "checkoutservice",
+      "score": 6.85035086274286
+    },
+    {
+      "case": "36937f85-134",
+      "component": "checkoutservice",
+      "score": 6.247396621145187
+    },
+    {
+      "case": "3400061d-135",
+      "component": "adservice",
+      "score": 9.306338304709676
+    },
+    {
+      "case": "42c6ad6f-136",
+      "component": "aiops-k8s-03",
+      "score": 8.080520152275215
+    },
+    {
+      "case": "f99b1645-137",
+      "component": "aiops-k8s-07",
+      "score": 8.251440925865221
+    },
+    {
+      "case": "2272a5ff-138",
+      "component": "checkoutservice",
+      "score": 6.392663412133
+    },
+    {
+      "case": "cc3b1830-139",
+      "component": "checkoutservice",
+      "score": 6.305752778514945
+    },
+    {
+      "case": "6f84e51d-140",
+      "component": "checkoutservice",
+      "score": 6.369442788154688
+    },
+    {
+      "case": "5b520645-141",
+      "component": "emailservice",
+      "score": 10.42942306975593
+    },
+    {
+      "case": "ba74cb57-142",
+      "component": "aiops-k8s-07",
+      "score": 7.636002553531332
+    },
+    {
+      "case": "fe25ee9b-143",
+      "component": "aiops-k8s-04",
+      "score": 7.635362698252427
+    },
+    {
+      "case": "94d48f2c-144",
+      "component": "aiops-k8s-07",
+      "score": 6.886747170155215
+    },
+    {
+      "case": "f066e1dd-145",
+      "component": "checkoutservice",
+      "score": 6.594309119984755
+    },
+    {
+      "case": "ad13b37a-146",
+      "component": "aiops-k8s-04",
+      "score": 8.448048906051207
+    },
+    {
+      "case": "dce5cefa-147",
+      "component": "aiops-k8s-08",
+      "score": 6.902276926079618
+    },
+    {
+      "case": "50f000ee-148",
+      "component": "checkoutservice",
+      "score": 6.7251239144980826
+    },
+    {
+      "case": "0a373d08-149",
+      "component": "checkoutservice",
+      "score": 6.6643084213595
+    },
+    {
+      "case": "9a257bd5-150",
+      "component": "checkoutservice",
+      "score": 6.798065760972087
+    },
+    {
+      "case": "162fe36a-151",
+      "component": "aiops-k8s-03",
+      "score": 8.254369269621112
+    },
+    {
+      "case": "eba76009-152",
+      "component": "checkoutservice",
+      "score": 6.764691579005367
+    },
+    {
+      "case": "168cdf19-153",
+      "component": "checkoutservice",
+      "score": 6.481096756759404
+    },
+    {
+      "case": "05b57997-154",
+      "component": "checkoutservice",
+      "score": 5.846912537828871
+    },
+    {
+      "case": "54002a5c-155",
+      "component": "aiops-k8s-07",
+      "score": 7.579310701077579
+    },
+    {
+      "case": "934844b2-156",
+      "component": "aiops-k8s-08",
+      "score": 4.176164234329199
+    },
+    {
+      "case": "1c47d7bf-157",
+      "component": "hipstershop",
+      "score": 3.791286459661485
+    }
+  ]
+}

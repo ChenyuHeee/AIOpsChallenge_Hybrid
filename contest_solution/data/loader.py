@@ -175,10 +175,18 @@ class TelemetryLoader:
             return pd.read_parquet(parquet_path)
 
         start, end = window
-        # Observed dataset shift: folders follow local day (UTC+8) while query time strings
-        # are often local time but suffixed with 'Z'. Shift -8h before filtering.
-        start = self._ensure_utc(start) - timedelta(hours=8) - self.window_padding
-        end = self._ensure_utc(end) - timedelta(hours=8) + self.window_padding
+        # Time window alignment:
+        # - In this repo's contest data, parquet time strings are ISO8601 with 'Z' and represent UTC.
+        # - Day folders may follow local date, but timestamps remain UTC.
+        # Therefore we DO NOT shift by default.
+        # If you encounter a dataset where query times are local but suffixed with 'Z',
+        # set RCA_TIME_SHIFT_HOURS=-8 (or other) to realign.
+        try:
+            shift_hours = float(os.getenv("RCA_TIME_SHIFT_HOURS", "0"))
+        except ValueError:
+            shift_hours = 0.0
+        start = self._ensure_utc(start) + timedelta(hours=shift_hours) - self.window_padding
+        end = self._ensure_utc(end) + timedelta(hours=shift_hours) + self.window_padding
         start_iso = start.isoformat().replace("+00:00", "Z")
         end_iso = end.isoformat().replace("+00:00", "Z")
 
@@ -230,9 +238,13 @@ class TelemetryLoader:
             return pd.read_parquet(parquet_path)
 
         start, end = window
-        # Same UTC+8 vs 'Z' mismatch handling as string-time datasets.
-        start = self._ensure_utc(start) - timedelta(hours=8) - self.window_padding
-        end = self._ensure_utc(end) - timedelta(hours=8) + self.window_padding
+        # Keep aligned with _read_time_string_parquet_windowed (default: no shift).
+        try:
+            shift_hours = float(os.getenv("RCA_TIME_SHIFT_HOURS", "0"))
+        except ValueError:
+            shift_hours = 0.0
+        start = self._ensure_utc(start) + timedelta(hours=shift_hours) - self.window_padding
+        end = self._ensure_utc(end) + timedelta(hours=shift_hours) + self.window_padding
 
         dataset = ds.dataset(parquet_path, format="parquet")
         schema_names = {field.name for field in dataset.schema}

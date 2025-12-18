@@ -1,0 +1,25 @@
+uuid,date,query
+0a9fce75-340,2025-06-17,A fault was detected from 2025-06-17T21:10:07Z to 2025-06-17T21:28:07Z. Please analyze its root cause.
+0b81a605-339,2025-06-17,A fault was detected from 2025-06-17T20:10:05Z to 2025-06-17T20:24:05Z. Please analyze its root cause.
+3d284cf0-333,2025-06-17,A fault was detected from 2025-06-17T14:10:48Z to 2025-06-17T14:20:48Z. Please analyze its root cause.
+4fd42adb-327,2025-06-17,A fault was detected from 2025-06-17T08:10:39Z to 2025-06-17T08:22:39Z. Please analyze its root cause.
+53ab3ccb-326,2025-06-17,A fault was detected from 2025-06-17T07:10:39Z to 2025-06-17T07:30:39Z. Please analyze its root cause.
+55b23e04-325,2025-06-17,A fault was detected from 2025-06-17T06:10:38Z to 2025-06-17T06:28:38Z. Please analyze its root cause.
+68bbf4fd-332,2025-06-17,A fault was detected from 2025-06-17T13:10:47Z to 2025-06-17T13:27:47Z. Please analyze its root cause.
+70d3b8b0-329,2025-06-17,A fault was detected from 2025-06-17T10:10:43Z to 2025-06-17T10:28:43Z. Please analyze its root cause.
+76222cb2-331,2025-06-17,A fault was detected from 2025-06-17T12:10:46Z to 2025-06-17T12:34:46Z. Please analyze its root cause.
+83524cef-323,2025-06-17,A fault was detected from 2025-06-17T04:10:20Z to 2025-06-17T04:15:20Z. Please analyze its root cause.
+8c61bc09-338,2025-06-17,A fault was detected from 2025-06-17T19:10:05Z to 2025-06-17T19:25:05Z. Please analyze its root cause.
+8e7a3965-336,2025-06-17,A fault was detected from 2025-06-17T17:10:03Z to 2025-06-17T17:15:03Z. Please analyze its root cause.
+985de575-334,2025-06-17,A fault was detected from 2025-06-17T15:10:50Z to 2025-06-17T15:23:50Z. Please analyze its root cause.
+a42d2eb4-319,2025-06-17,A fault was detected from 2025-06-17T00:10:15Z to 2025-06-17T00:32:15Z. Please analyze its root cause.
+b9319370-341,2025-06-17,A fault was detected from 2025-06-17T22:10:08Z to 2025-06-17T22:34:08Z. Please analyze its root cause.
+b96848a5-342,2025-06-17,A fault was detected from 2025-06-17T23:10:08Z to 2025-06-17T23:32:08Z. Please analyze its root cause.
+bbfefe10-321,2025-06-17,A fault was detected from 2025-06-17T02:10:17Z to 2025-06-17T02:33:17Z. Please analyze its root cause.
+c3377c5c-337,2025-06-17,A fault was detected from 2025-06-17T18:10:04Z to 2025-06-17T18:29:04Z. Please analyze its root cause.
+c3f4fde9-330,2025-06-17,A fault was detected from 2025-06-17T11:10:44Z to 2025-06-17T11:33:44Z. Please analyze its root cause.
+d44478e6-328,2025-06-17,A fault was detected from 2025-06-17T09:10:41Z to 2025-06-17T09:35:41Z. Please analyze its root cause.
+e1562aa2-335,2025-06-17,A fault was detected from 2025-06-17T16:10:02Z to 2025-06-17T16:29:02Z. Please analyze its root cause.
+e539dea4-322,2025-06-17,A fault was detected from 2025-06-17T03:10:20Z to 2025-06-17T03:35:20Z. Please analyze its root cause.
+ed40c5a3-324,2025-06-17,A fault was detected from 2025-06-17T05:10:21Z to 2025-06-17T05:21:21Z. Please analyze its root cause.
+fc3737af-320,2025-06-17,A fault was detected from 2025-06-17T01:10:16Z to 2025-06-17T01:23:16Z. Please analyze its root cause.

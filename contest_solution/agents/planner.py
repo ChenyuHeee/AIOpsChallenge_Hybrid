@@ -24,23 +24,44 @@ class CasePlan:
 
 class PlannerAgent:
     ISO_PATTERN = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
+    # Conservative allow-list of known components for hinting.
+    # Keeps hints precise and avoids generic tokens like 'service' polluting the signal.
+    KNOWN_COMPONENTS = {
+        "adservice",
+        "cartservice",
+        "checkoutservice",
+        "currencyservice",
+        "emailservice",
+        "frontend",
+        "paymentservice",
+        "productcatalogservice",
+        "recommendationservice",
+        "shippingservice",
+    }
 
     def __init__(self, insight_repo: InsightRepository) -> None:
         self.insight_repo = insight_repo
 
     def build_plan(self, uuid: str, query: str) -> CasePlan:
         keywords = self._extract_keywords(query)
-        hints = [
-            kw
-            for kw in keywords
-            if (
-                ("service" in kw)
-                or kw.endswith("pod")
-                or kw.endswith("db")
-                or kw.startswith("aiops-k8s-")
-                or kw.startswith("k8s-master")
-            )
-        ]
+        hints: List[str] = []
+        for kw in keywords:
+            if kw == "service":
+                continue
+            if kw in self.KNOWN_COMPONENTS:
+                hints.append(kw)
+                continue
+            # Heuristic: capture service-like tokens while avoiding generic 'service'.
+            if kw.endswith("service") and len(kw) > len("service"):
+                hints.append(kw)
+                continue
+            # Infra/node identifiers.
+            if kw.startswith("aiops-k8s-") or kw.startswith("k8s-master"):
+                hints.append(kw)
+                continue
+            # Generic infra/resource tokens.
+            if kw.endswith("pod") or kw.endswith("db"):
+                hints.append(kw)
         window = self._extract_time_window(query)
         sop_steps = [step.name for step in INCIDENT_SOP]
         matched_insights = self.insight_repo.relevant(query, limit=4)
