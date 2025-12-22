@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -25,6 +25,12 @@ class TelemetryFrames:
     logs: pd.DataFrame
     traces: pd.DataFrame
     event_graph: Dict[str, List[str]]
+
+    # Optional baseline frames loaded from windows adjacent to the incident window.
+    # Used by engineering-rule presets to compute fault-vs-normal contrast scores.
+    metrics_baseline: pd.DataFrame = field(default_factory=pd.DataFrame)
+    logs_baseline: pd.DataFrame = field(default_factory=pd.DataFrame)
+    traces_baseline: pd.DataFrame = field(default_factory=pd.DataFrame)
 
     def empty(self) -> bool:
         return self.metrics.empty and self.logs.empty and self.traces.empty
@@ -61,8 +67,83 @@ class TelemetryLoader:
             metrics = self._read_dir(day_dir / self.METRIC_DIR, window)
             logs = self._read_dir(day_dir / self.LOG_DIR, window)
             traces = self._read_dir(day_dir / self.TRACE_DIR, window)
+
+        metrics_baseline = pd.DataFrame()
+        logs_baseline = pd.DataFrame()
+        traces_baseline = pd.DataFrame()
+        if window is not None and os.getenv("RCA_ENABLE_BASELINE_WINDOWS", "0") not in {"0", "false", "False"}:
+            windows = self._baseline_windows(window)
+            # Metrics baseline tends to be the most stable/valuable contrast signal.
+            baseline_frames: List[pd.DataFrame] = []
+            for w in windows:
+                baseline_frames.append(self._read_dir(day_dir / self.METRIC_DIR, w))
+            baseline_frames = [f for f in baseline_frames if not f.empty]
+            if baseline_frames:
+                metrics_baseline = pd.concat(baseline_frames, ignore_index=True)
+
+            # Keep logs/traces baseline OFF by default to control runtime.
+            if os.getenv("RCA_ENABLE_BASELINE_LOGS", "0") not in {"0", "false", "False"}:
+                log_frames: List[pd.DataFrame] = []
+                for w in windows:
+                    log_frames.append(self._read_dir(day_dir / self.LOG_DIR, w, max_files=30, sample_rows=30_000))
+                log_frames = [f for f in log_frames if not f.empty]
+                if log_frames:
+                    logs_baseline = pd.concat(log_frames, ignore_index=True)
+
+            if os.getenv("RCA_ENABLE_BASELINE_TRACES", "0") not in {"0", "false", "False"}:
+                trace_frames: List[pd.DataFrame] = []
+                for w in windows:
+                    trace_frames.append(self._read_dir(day_dir / self.TRACE_DIR, w, max_files=4, sample_rows=20_000))
+                trace_frames = [f for f in trace_frames if not f.empty]
+                if trace_frames:
+                    traces_baseline = pd.concat(trace_frames, ignore_index=True)
         graph = self._build_event_graph(metrics, logs, traces)
-        return TelemetryFrames(metrics=metrics, logs=logs, traces=traces, event_graph=graph)
+        return TelemetryFrames(
+            metrics=metrics,
+            logs=logs,
+            traces=traces,
+            metrics_baseline=metrics_baseline,
+            logs_baseline=logs_baseline,
+            traces_baseline=traces_baseline,
+            event_graph=graph,
+        )
+
+    def _baseline_windows(self, window: Tuple[datetime, datetime]) -> List[Tuple[datetime, datetime]]:
+        """Construct baseline (normal) windows around the incident window.
+
+        Default (engineering-rule style):
+        - before: [start - gap - length, start - gap]
+        - after:  [end + gap, end + gap + length]
+
+        These are conservative approximations of “fault vs normal” without requiring
+        neighboring incident boundaries.
+        """
+
+        start, end = window
+        try:
+            gap_min = float(os.getenv("RCA_BASELINE_GAP_MIN", "10"))
+        except ValueError:
+            gap_min = 10.0
+        try:
+            length_min = float(os.getenv("RCA_BASELINE_LEN_MIN", "10"))
+        except ValueError:
+            length_min = 10.0
+
+        gap = timedelta(minutes=max(0.0, gap_min))
+        length = timedelta(minutes=max(1.0, length_min))
+        # IMPORTANT: windowed parquet reads apply `self.window_padding` on both sides.
+        # If we don't account for that here, the padded baseline windows can overlap the
+        # incident window, contaminating “normal” telemetry with fault telemetry.
+        # That especially hurts log/trace baseline contrast and can erase replica-level signals.
+        pad = self.window_padding
+        start = self._ensure_utc(start)
+        end = self._ensure_utc(end)
+        # Expand the separation by `pad` so that after padding is applied during reads,
+        # baseline still stays at least `gap` away from the incident window.
+        effective_gap = gap + pad
+        before = (start - effective_gap - length, start - effective_gap)
+        after = (end + effective_gap, end + effective_gap + length)
+        return [before, after]
 
     def _resolve_day_dir(
         self,

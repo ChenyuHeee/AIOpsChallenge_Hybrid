@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Sequence
+from typing import Any, Dict, List, Sequence
 
 from ..config import PipelineConfig
 from ..utils.hypothesis import Hypothesis
@@ -16,14 +16,18 @@ class SubmissionEntry:
     component: str
     reason: str
     reasoning_trace: List[dict]
+    debug: Dict[str, Any] | None = None
 
     def to_dict(self) -> dict:
-        return {
+        payload = {
             "uuid": self.uuid,
             "component": self.component,
             "reason": self.reason,
             "reasoning_trace": self.reasoning_trace,
         }
+        if self.debug is not None:
+            payload["debug"] = self.debug
+        return payload
 
 
 class SubmissionValidator:
@@ -84,7 +88,7 @@ class SubmissionValidator:
         if not tokens:
             return reason
 
-        reason_lower = reason.lower()
+        reason_lower = (reason or "").lower()
         chosen: List[str] = []
         for token in tokens:
             if token.lower() in reason_lower:
@@ -93,10 +97,17 @@ class SubmissionValidator:
             if len(chosen) >= 3:
                 break
 
-        if not chosen:
+        prefix_parts: List[str] = []
+        if component and component.lower() not in reason_lower:
+            prefix_parts.append(component)
+        if chosen:
+            prefix_parts.append("Evidence:" + ",".join(chosen))
+
+        if not prefix_parts:
             return reason
 
-        augmented = (reason.strip() + " Evidence: " + ", ".join(chosen)).strip()
+        # Prepend tokens to avoid truncation dropping the most important keywords.
+        augmented = (" ".join(prefix_parts) + " " + reason.strip()).strip()
         words = augmented.split()
         if len(words) > self.config.max_reason_words:
             augmented = " ".join(words[: self.config.max_reason_words])

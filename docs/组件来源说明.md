@@ -28,4 +28,4 @@ python -m contest_solution.main --telemetry-root ../data --metadata ../metadata_
 > 注意：即使切到 `llm`，仍会做长度/格式校验；并对 component 与候选集合做“大小写不敏感”对齐，以降低 token 漂移。
 
 ## 对比试验记录
-- 试验报告：`docs/对比试验/01_组件来源对比/报告.md`
+- 试验报告：`docs/对比试验/week1/01_组件来源对比/报告.md`

@@ -82,10 +82,11 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "la_boost_v2_edge_replica",
             "la_boost_v3_node_boost",
             "la_boost_v7_node_metric_dominance",
+            "la_boost_v8_engineering_rules",
             "la_boost_v5_node_strong_override",
             "la_boost_v6_prior_off",
         ],
-        help="候选方案预设：final_grid_v1 / bias_fix_v1 / bias_fix_v1_hint_grid / collapse_diag_v1 / la_boost_v1 / la_boost_v2_edge_replica / la_boost_v3_node_boost / la_boost_v7_node_metric_dominance / la_boost_v5_node_strong_override / la_boost_v6_prior_off",
+        help="候选方案预设：final_grid_v1 / bias_fix_v1 / bias_fix_v1_hint_grid / collapse_diag_v1 / la_boost_v1 / la_boost_v2_edge_replica / la_boost_v3_node_boost / la_boost_v7_node_metric_dominance / la_boost_v8_engineering_rules / la_boost_v5_node_strong_override / la_boost_v6_prior_off",
     )
     p.add_argument(
         "--output-report",
@@ -646,6 +647,70 @@ def build_candidates(preset: str) -> List[Candidate]:
                     "RCA_NODE_DOMINANCE_MIN_RATIO": "0.6",
                     "RCA_NODE_DOMINANCE_MARGIN": "0.03",
                     "RCA_STRIP_REPLICA_SUFFIX": "0",
+                },
+            ),
+        ]
+
+    if preset == "la_boost_v8_engineering_rules":
+        # Target: follow the “strong engineering rules” route:
+        # - fault vs normal (baseline windows) contrast for metrics
+        # - fault_level gate (node vs tidb vs service) to reduce systematic confusion
+        # Keep LLM disabled to keep experiments stable and comparable.
+        base_env = {
+            "RCA_COMPONENT_SOURCE": "consensus",
+            "RCA_WINDOW_PADDING_MIN": "20",
+            "RCA_ENABLE_MODALITY_BONUS": "0",
+            "RCA_ENABLE_HINT_BONUS": "0",
+            "RCA_COMPONENT_PRIOR_SCALE": "1.0",
+            "RCA_USE_LEGACY_MEMORY": "0",
+            "RCA_STRIP_REPLICA_SUFFIX": "0",
+            # Baseline windows for fault-vs-normal contrast
+            "RCA_ENABLE_BASELINE_WINDOWS": "1",
+            "RCA_BASELINE_GAP_MIN": "10",
+            "RCA_BASELINE_LEN_MIN": "10",
+            # Fault-level gate
+            "RCA_ENABLE_FAULT_LEVEL_GATE": "1",
+            "RCA_FAULT_LEVEL_GATE_PENALTY": "0.25",
+            "RCA_FAULT_LEVEL_GATE_NODE_MIN_METRIC": "6.0",
+            "RCA_FAULT_LEVEL_GATE_NODE_MIN_RATIO": "0.75",
+            "RCA_FAULT_LEVEL_GATE_TIDB_MIN_METRIC": "3.0",
+            "RCA_FAULT_LEVEL_GATE_TIDB_MIN_RATIO": "0.70",
+            # Keep previous safe overrides for node/tidb
+            "RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE": "1",
+            "RCA_NODE_DOMINANCE_MIN_METRIC": "5.2",
+            "RCA_NODE_DOMINANCE_MIN_RATIO": "0.6",
+            "RCA_NODE_DOMINANCE_MARGIN": "0.03",
+            "RCA_ENABLE_TIDB_METRIC_DOMINANCE_OVERRIDE": "1",
+            "RCA_TIDB_DOMINANCE_MIN_METRIC": "2.6",
+            "RCA_TIDB_DOMINANCE_MIN_RATIO": "0.55",
+            "RCA_TIDB_DOMINANCE_MARGIN": "0.02",
+            "RCA_TIDB_METRIC_SCORE_MULT": "1.8",
+            "RCA_DISABLE_LLM": "1",
+        }
+
+        return [
+            Candidate(
+                key="base_safe",
+                name="方案A：对照（v7: node/tidb dominance；baseline/fault_level 关闭）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_BASELINE_WINDOWS": "0",
+                    "RCA_ENABLE_FAULT_LEVEL_GATE": "0",
+                },
+            ),
+            Candidate(
+                key="baseline_only",
+                name="方案B：开启 fault-vs-normal baseline 对照（仅 metrics）",
+                env={
+                    **base_env,
+                    "RCA_ENABLE_FAULT_LEVEL_GATE": "0",
+                },
+            ),
+            Candidate(
+                key="baseline_plus_gate",
+                name="方案C：baseline 对照 + fault_level gate（工程规则版）",
+                env={
+                    **base_env,
                 },
             ),
         ]

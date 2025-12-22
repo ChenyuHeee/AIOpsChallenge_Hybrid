@@ -1,0 +1,25 @@
+uuid,date,query
+7f595b45-181,2025-06-10,Determine the root cause of the system fault during 2025-06-10T00:10:28Z to 2025-06-10T00:35:28Z.
+eb0c4ea8-182,2025-06-10,A fault occurred from 2025-06-10T01:10:30Z to 2025-06-10T01:31:30Z. Please identify the root cause.
+d3dd6ed7-183,2025-06-10,The system experienced an anomaly from 2025-06-10T02:10:32Z to 2025-06-10T02:10:33Z. Please infer the possible cause.
+fb327034-184,2025-06-10,A fault occurred from 2025-06-10T03:10:34Z to 2025-06-10T03:33:34Z. Please identify the root cause.
+1fbef130-185,2025-06-10,The system experienced an anomaly from 2025-06-10T04:10:36Z to 2025-06-10T04:26:36Z. Please infer the possible cause.
+97d37c35-186,2025-06-10,A fault was detected from 2025-06-10T05:10:38Z to 2025-06-10T05:23:38Z. Please analyze its root cause.
+9b0d8a50-187,2025-06-10,A fault occurred from 2025-06-10T06:10:40Z to 2025-06-10T06:31:40Z. Please identify the root cause.
+7e03b07d-188,2025-06-10,A fault was detected from 2025-06-10T07:10:44Z to 2025-06-10T07:28:44Z. Please analyze its root cause.
+96e4b852-189,2025-06-10,A fault occurred from 2025-06-10T08:10:46Z to 2025-06-10T08:10:47Z. Please identify the root cause.
+7513dbaf-190,2025-06-10,Please analyze the abnormal event between 2025-06-10T09:10:48Z and 2025-06-10T09:27:48Z and provide the root cause.
+c9832b3e-191,2025-06-10,The system experienced an anomaly from 2025-06-10T10:10:50Z to 2025-06-10T10:22:50Z. Please infer the possible cause.
+e55fb1cb-192,2025-06-10,A fault was detected from 2025-06-10T11:10:52Z to 2025-06-10T11:28:52Z. Please analyze its root cause.
+e4ef8a12-193,2025-06-10,A fault was detected from 2025-06-10T12:10:54Z to 2025-06-10T12:27:54Z. Please analyze its root cause.
+913e1ecf-194,2025-06-10,The system experienced an anomaly from 2025-06-10T13:10:57Z to 2025-06-10T13:21:57Z. Please infer the possible cause.
+7984364a-195,2025-06-10,Determine the root cause of the system fault during 2025-06-10T14:10:58Z to 2025-06-10T14:28:58Z.
+6a643823-196,2025-06-10,Determine the root cause of the system fault during 2025-06-10T15:11:01Z to 2025-06-10T15:21:01Z.
+de1d442d-197,2025-06-10,The system experienced an anomaly from 2025-06-10T16:10:01Z to 2025-06-10T16:30:01Z. Please infer the possible cause.
+4229b9c5-198,2025-06-10,A fault occurred from 2025-06-10T17:10:06Z to 2025-06-10T17:28:06Z. Please identify the root cause.
+ff15d32c-199,2025-06-10,Determine the root cause of the system fault during 2025-06-10T18:10:08Z to 2025-06-10T18:23:08Z.
+5c8eb611-200,2025-06-10,A fault was detected from 2025-06-10T19:10:10Z to 2025-06-10T19:26:10Z. Please analyze its root cause.
+40424656-201,2025-06-10,The system experienced an anomaly from 2025-06-10T20:10:12Z to 2025-06-10T20:34:12Z. Please infer the possible cause.
+a499f40d-202,2025-06-10,The system experienced an anomaly from 2025-06-10T21:10:13Z to 2025-06-10T21:26:13Z. Please infer the possible cause.
+e25d2429-203,2025-06-10,The system experienced an anomaly from 2025-06-10T22:10:17Z to 2025-06-10T22:23:17Z. Please infer the possible cause.
+eb79e778-204,2025-06-10,A fault was detected from 2025-06-10T23:10:19Z to 2025-06-10T23:23:19Z. Please analyze its root cause.

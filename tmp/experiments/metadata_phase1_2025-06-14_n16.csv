@@ -1,0 +1,17 @@
+uuid,date,query
+f5d0349a-276,2025-06-14,Please analyze the abnormal event between 2025-06-14T00:10:19Z and 2025-06-14T00:30:19Z and provide the root cause.
+4e221a94-277,2025-06-14,The system experienced an anomaly from 2025-06-14T01:10:20Z to 2025-06-14T01:22:20Z. Please infer the possible cause.
+a1b60eea-278,2025-06-14,Please analyze the abnormal event between 2025-06-14T02:10:22Z and 2025-06-14T02:27:22Z and provide the root cause.
+825545e5-279,2025-06-14,A fault was detected from 2025-06-14T03:10:24Z to 2025-06-14T03:28:24Z. Please analyze its root cause.
+e955714b-280,2025-06-14,A fault was detected from 2025-06-14T04:10:26Z to 2025-06-14T04:35:26Z. Please analyze its root cause.
+de83df2d-281,2025-06-14,A fault was detected from 2025-06-14T05:10:28Z to 2025-06-14T05:31:28Z. Please analyze its root cause.
+9c3b8fe7-282,2025-06-14,The system experienced an anomaly from 2025-06-14T06:10:30Z to 2025-06-14T06:31:30Z. Please infer the possible cause.
+84f4b04a-283,2025-06-14,The system experienced an anomaly from 2025-06-14T07:10:32Z to 2025-06-14T07:21:32Z. Please infer the possible cause.
+e4dae239-284,2025-06-14,The system experienced an anomaly from 2025-06-14T08:10:34Z to 2025-06-14T08:27:34Z. Please infer the possible cause.
+11f619f0-285,2025-06-14,A fault occurred from 2025-06-14T09:10:35Z to 2025-06-14T09:32:35Z. Please identify the root cause.
+3da57a36-286,2025-06-14,A fault was detected from 2025-06-14T10:10:38Z to 2025-06-14T10:26:38Z. Please analyze its root cause.
+04418665-287,2025-06-14,The system experienced an anomaly from 2025-06-14T11:10:40Z to 2025-06-14T11:25:40Z. Please infer the possible cause.
+27914c5a-288,2025-06-14,Please analyze the abnormal event between 2025-06-14T12:10:42Z and 2025-06-14T12:34:42Z and provide the root cause.
+53d5d618-289,2025-06-14,The system experienced an anomaly from 2025-06-14T13:10:45Z to 2025-06-14T13:25:45Z. Please infer the possible cause.
+a63a0c8b-290,2025-06-14,Determine the root cause of the system fault during 2025-06-14T14:10:47Z to 2025-06-14T14:31:47Z.
+f370cf6d-291,2025-06-14,The system experienced an anomaly from 2025-06-14T15:10:48Z to 2025-06-14T15:25:48Z. Please infer the possible cause.

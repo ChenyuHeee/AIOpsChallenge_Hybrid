@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 import os
+import re
 from typing import Any, Dict, Iterable, List, Tuple
 
 from ..config import load_memory, store_memory
@@ -15,6 +16,9 @@ from ..utils.hypothesis import Hypothesis
 class ConsensusResult:
     ranked_components: List[Tuple[str, float]]
     supporting_evidence: Dict[str, List[str]]
+    modality_support: Dict[str, List[str]]
+    node_metric_max: Dict[str, float]
+    tidb_metric_max: Dict[str, float]
 
 
 class ConsensusOrchestrator:
@@ -42,6 +46,18 @@ class ConsensusOrchestrator:
                     weight = 0.6
             reinforcement = self._memory_reward(hypothesis.component)
             prior = self._component_prior(hypothesis.component)
+
+            # A-direction: TiDB candidates can be under-scored because they rely heavily on
+            # MetricSpecialist while service candidates accumulate higher-weight traces/logs.
+            # Apply an optional multiplier ONLY to MetricSpecialist votes for tidb-*.
+            if hypothesis.source == "MetricSpecialist" and self._is_tidb(hypothesis.component):
+                try:
+                    mult = float(os.getenv("RCA_WEIGHT_METRIC_TIDB_MULT", "1.0"))
+                except ValueError:
+                    mult = 1.0
+                mult = max(0.5, min(4.0, mult))
+                weight *= mult
+
             final_score = hypothesis.confidence * weight * reinforcement * prior
             scores[hypothesis.component] += final_score
             for item in hypothesis.evidence:
@@ -84,16 +100,57 @@ class ConsensusOrchestrator:
         # Optional: metric-dominance override (safer than blanket node boost).
         # If a node has a very strong CPU/memory metric AND its score is already competitive
         # with the best non-node candidate, promote it to the top.
-        self._apply_node_metric_dominance_override(scores, node_metric_max)
+        self._apply_node_metric_dominance_override(scores, node_metric_max, modality_support)
+
+        # Optional: TiDB competitiveness boost (phase2).
+        # When TiDB metric evidence is strong but TiDB total score is under-weighted
+        # relative to service multi-modal signals, lift the best TiDB candidate into a
+        # competitive score band. This avoids relying on aggressive type inference.
+        self._apply_tidb_metric_competitive_boost(scores, tidb_metric_max, modality_support)
 
         # Optional: TiDB dominance override (phase2) - only when TiDB metric evidence is strong.
         self._apply_tidb_metric_dominance_override(scores, tidb_metric_max)
 
+        # Optional: fault-level gate (engineering rule):
+        # decide whether this case is node-level vs service-level vs TiDB-level,
+        # then penalize other levels to reduce systematic confusion.
+        if os.getenv("RCA_ENABLE_KIND_AWARE_RERANK", "0") not in {"0", "false", "False"}:
+            self._apply_kind_aware_rerank(
+                scores,
+                evidence,
+                modality_support=modality_support,
+                node_metric_max=node_metric_max,
+                tidb_metric_max=tidb_metric_max,
+            )
+        else:
+            self._apply_fault_level_gate(
+                scores,
+                evidence,
+                modality_support=modality_support,
+                node_metric_max=node_metric_max,
+                tidb_metric_max=tidb_metric_max,
+            )
+
         # Optional: prefer components supported by multiple modalities.
         self._apply_multimodal_bonus(scores, modality_support)
 
+        # Optional: when replica-specific evidence exists (e.g., logs show adservice-0 errors),
+        # prefer the replica over the base service token to avoid systematic LA loss.
+        self._prefer_replica_by_evidence(scores, modality_support)
+
+        # Optional: suppress popular-service collapse when evidence is weak.
+        # This is OFF by default and should be enabled explicitly in experiments.
+        self._apply_popular_component_penalty(scores, modality_support)
+
         # Optional: boost components explicitly hinted by query keywords (planner hints).
         self._apply_hint_bonus(scores, component_hints)
+
+        # Optional: if the query explicitly mentions a replica pod (xxxservice-0), prefer that
+        # replica over the base service token when the base service would otherwise win.
+        self._prefer_replica_hints(scores, component_hints)
+
+        # Optional: prefer replica candidates over base services when evidence is pod-specific.
+        self._prefer_replica_candidates(scores, modality_support)
 
         ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         if not ranked:
@@ -108,7 +165,546 @@ class ConsensusOrchestrator:
         
         self._append_history(case_id, ranked)
         store_memory(self.memory_path, self.memory)
-        return ConsensusResult(ranked_components=ranked, supporting_evidence=evidence)
+        return ConsensusResult(
+            ranked_components=ranked,
+            supporting_evidence=evidence,
+            modality_support={k: sorted({str(m) for m in v}) for k, v in modality_support.items()},
+            node_metric_max=dict(node_metric_max),
+            tidb_metric_max=dict(tidb_metric_max),
+        )
+
+    @classmethod
+    def _prefer_replica_candidates(cls, scores: Dict[str, float], modality_support: Dict[str, set[str]]) -> None:
+        if os.getenv("RCA_ENABLE_REPLICA_CANDIDATE_PREFERENCE", "0") in {"0", "false", "False"}:
+            return
+
+        try:
+            min_ratio = float(os.getenv("RCA_REPLICA_CANDIDATE_MIN_RATIO", "0.75"))
+        except ValueError:
+            min_ratio = 0.75
+        min_ratio = max(0.0, min(1.0, min_ratio))
+
+        try:
+            margin = float(os.getenv("RCA_REPLICA_CANDIDATE_MARGIN", "0.01"))
+        except ValueError:
+            margin = 0.01
+        margin = max(0.0, min(0.2, margin))
+
+        require_non_metric = os.getenv("RCA_REPLICA_REQUIRE_NON_METRIC", "1") not in {"0", "false", "False"}
+
+        # For every base service token, check if a replica token exists and is competitive.
+        for base, base_score in list(scores.items()):
+            if base_score <= 0:
+                continue
+            if cls._is_node(base) or cls._is_tidb(base) or ("->" in base):
+                continue
+            # Only consider base tokens (no -<digit> suffix).
+            parts = base.rsplit("-", 1)
+            if len(parts) == 2 and parts[1].isdigit():
+                continue
+
+            # Find best replica candidate for this base.
+            best_replica = ""
+            best_score = 0.0
+            for comp, sc in scores.items():
+                if sc <= 0:
+                    continue
+                if not comp.startswith(base + "-"):
+                    continue
+                tail = comp.rsplit("-", 1)[-1]
+                if not tail.isdigit():
+                    continue
+                if require_non_metric:
+                    mods = modality_support.get(comp) or set()
+                    # Require at least one of logs/traces/graph to avoid purely metric-driven noise.
+                    if not ({"logs", "traces", "graph"} & set(str(m) for m in mods)):
+                        continue
+                if float(sc) > best_score:
+                    best_replica = comp
+                    best_score = float(sc)
+
+            if not best_replica:
+                continue
+
+            # Promote replica if it's close enough to the base score.
+            if best_score >= float(base_score) * min_ratio:
+                scores[best_replica] = max(float(scores.get(best_replica, 0.0)), float(base_score) * (1.0 + margin))
+
+    @staticmethod
+    def _prefer_replica_by_evidence(scores: Dict[str, float], modality_support: Dict[str, set[str]]) -> None:
+        if os.getenv("RCA_ENABLE_REPLICA_EVIDENCE_PREFERENCE", "0") in {"0", "false", "False"}:
+            return
+
+        try:
+            min_ratio = float(os.getenv("RCA_REPLICA_EVIDENCE_MIN_RATIO", "0.45"))
+        except ValueError:
+            min_ratio = 0.45
+        min_ratio = max(0.0, min(1.0, min_ratio))
+
+        try:
+            min_score = float(os.getenv("RCA_REPLICA_EVIDENCE_MIN_SCORE", "1.8"))
+        except ValueError:
+            min_score = 1.8
+        min_score = max(0.0, min(50.0, min_score))
+
+        try:
+            margin = float(os.getenv("RCA_REPLICA_EVIDENCE_MARGIN", "0.01"))
+        except ValueError:
+            margin = 0.01
+        margin = max(0.0, min(0.2, margin))
+
+        # Promote replica when it has logs/traces support and base token exists.
+        for replica, replica_score in list(scores.items()):
+            if replica_score <= 0:
+                continue
+            token = (replica or "").strip().lower()
+            if not re.fullmatch(r"[a-z0-9_-]*service-\d+", token):
+                continue
+            base, suffix = token.rsplit("-", 1)
+            if not base or not suffix.isdigit():
+                continue
+            base_score = float(scores.get(base, 0.0))
+            if base_score <= 0:
+                continue
+            mods = modality_support.get(replica) or set()
+            if "logs" not in mods and "traces" not in mods:
+                continue
+
+            # Only promote when replica is at least somewhat competitive, or has a decent absolute score.
+            if float(replica_score) < base_score * min_ratio and float(replica_score) < min_score:
+                continue
+
+            if float(replica_score) < base_score:
+                scores[replica] = base_score * (1.0 + margin)
+
+    @staticmethod
+    def _prefer_replica_hints(scores: Dict[str, float], component_hints: List[str] | None) -> None:
+        if os.getenv("RCA_PREFER_REPLICA_HINTS", "0") in {"0", "false", "False"}:
+            return
+        if not component_hints:
+            return
+        # Only consider explicit replica tokens like "checkoutservice-2".
+        hinted_replicas = []
+        for h in component_hints:
+            if not isinstance(h, str):
+                continue
+            token = h.strip().lower()
+            if not token:
+                continue
+            if re.fullmatch(r"[a-z0-9_-]*service-\d+", token):
+                hinted_replicas.append(token)
+        if not hinted_replicas:
+            return
+        try:
+            margin = float(os.getenv("RCA_REPLICA_HINT_MARGIN", "0.01"))
+        except ValueError:
+            margin = 0.01
+        margin = max(0.0, min(0.2, margin))
+
+        # Promote replica hint if its base is present and competitive.
+        for replica in hinted_replicas:
+            if replica not in scores:
+                continue
+            if "-" not in replica:
+                continue
+            base, suffix = replica.rsplit("-", 1)
+            if not suffix.isdigit() or not base:
+                continue
+            base_score = float(scores.get(base, 0.0))
+            replica_score = float(scores.get(replica, 0.0))
+            if base_score <= 0:
+                continue
+            # If base service is stronger, lift replica slightly above it.
+            if replica_score < base_score:
+                scores[replica] = base_score * (1.0 + margin)
+
+    @staticmethod
+    def _apply_popular_component_penalty(scores: Dict[str, float], modality_support: Dict[str, set[str]]) -> None:
+        if os.getenv("RCA_ENABLE_POPULAR_COMPONENT_PENALTY", "0") in {"0", "false", "False"}:
+            return
+        ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        if len(ranked) < 2:
+            return
+        top_comp, top_score = ranked[0]
+        second_score = float(ranked[1][1])
+        if top_score <= 0 or second_score <= 0:
+            return
+
+        popular_raw = os.getenv(
+            "RCA_POPULAR_COMPONENTS",
+            "adservice,checkoutservice,cartservice,recommendationservice,emailservice,productcatalogservice,frontend,shippingservice,paymentservice",
+        )
+        popular = {x.strip().lower() for x in popular_raw.split(",") if x.strip()}
+        if not popular:
+            return
+
+        top_base = top_comp.rsplit("-", 1)[0] if "-" in top_comp else top_comp
+        if top_comp not in popular and top_base not in popular:
+            return
+
+        modalities = modality_support.get(top_comp) or set()
+        m = len([x for x in modalities if x])
+        require_multimodal = os.getenv("RCA_POPULAR_PENALTY_REQUIRE_MULTIMODAL", "1") not in {"0", "false", "False"}
+        if require_multimodal and m >= 2:
+            return
+
+        try:
+            margin = float(os.getenv("RCA_POPULAR_PENALTY_MARGIN", "0.08"))
+        except ValueError:
+            margin = 0.08
+        margin = max(0.0, min(0.5, margin))
+        if top_score >= second_score * (1.0 + margin):
+            return
+
+        try:
+            penalty = float(os.getenv("RCA_POPULAR_PENALTY", "0.25"))
+        except ValueError:
+            penalty = 0.25
+        penalty = max(0.0, min(0.8, penalty))
+
+        scores[top_comp] = float(top_score) * (1.0 - penalty)
+
+    @classmethod
+    def _apply_fault_level_gate(
+        cls,
+        scores: Dict[str, float],
+        evidence: Dict[str, List[str]],
+        *,
+        modality_support: Dict[str, set[str]],
+        node_metric_max: Dict[str, float],
+        tidb_metric_max: Dict[str, float],
+    ) -> None:
+        if os.getenv("RCA_ENABLE_FAULT_LEVEL_GATE", "0") in {"0", "false", "False"}:
+            return
+
+        node_items = [(c, s) for c, s in scores.items() if cls._is_node(c) and s > 0]
+        tidb_items = [(c, s) for c, s in scores.items() if cls._is_tidb(c) and s > 0]
+        non_node_best = max((s for c, s in scores.items() if not cls._is_node(c)), default=0.0)
+        non_tidb_best = max((s for c, s in scores.items() if not cls._is_tidb(c)), default=0.0)
+
+        top_node = max(node_items, key=lambda x: node_metric_max.get(x[0], 0.0))[0] if node_items else ""
+        top_tidb = max(tidb_items, key=lambda x: tidb_metric_max.get(x[0], 0.0))[0] if tidb_items else ""
+
+        top_node_score = float(scores.get(top_node, 0.0)) if top_node else 0.0
+        top_node_metric = float(node_metric_max.get(top_node, 0.0)) if top_node else 0.0
+        top_tidb_score = float(scores.get(top_tidb, 0.0)) if top_tidb else 0.0
+        top_tidb_metric = float(tidb_metric_max.get(top_tidb, 0.0)) if top_tidb else 0.0
+
+        try:
+            node_min_metric = float(os.getenv("RCA_FAULT_LEVEL_GATE_NODE_MIN_METRIC", "6.0"))
+        except ValueError:
+            node_min_metric = 6.0
+        try:
+            node_min_ratio = float(os.getenv("RCA_FAULT_LEVEL_GATE_NODE_MIN_RATIO", "0.75"))
+        except ValueError:
+            node_min_ratio = 0.75
+
+        try:
+            tidb_min_metric = float(os.getenv("RCA_FAULT_LEVEL_GATE_TIDB_MIN_METRIC", "3.0"))
+        except ValueError:
+            tidb_min_metric = 3.0
+        try:
+            tidb_min_ratio = float(os.getenv("RCA_FAULT_LEVEL_GATE_TIDB_MIN_RATIO", "0.70"))
+        except ValueError:
+            tidb_min_ratio = 0.70
+
+        # Penalty is softer than hard filtering: keeps recall in ambiguous cases.
+        try:
+            penalty = float(os.getenv("RCA_FAULT_LEVEL_GATE_PENALTY", "0.25"))
+        except ValueError:
+            penalty = 0.25
+        penalty = max(0.0, min(1.0, penalty))
+
+        # Gate decision.
+        gate: str | None = None
+
+        # Guardrail: replica-level service evidence (especially from logs) is often more
+        # component-specific than node metrics. When such evidence exists, avoid mistakenly
+        # gating to node-level based on correlated infra KPIs.
+        try:
+            block_min_ratio = float(os.getenv("RCA_FAULT_LEVEL_GATE_REPLICA_LOG_BLOCK_RATIO", "0.55"))
+        except ValueError:
+            block_min_ratio = 0.55
+        block_min_ratio = max(0.0, min(1.0, block_min_ratio))
+
+        try:
+            block_min_score = float(os.getenv("RCA_FAULT_LEVEL_GATE_REPLICA_LOG_BLOCK_SCORE", "2.2"))
+        except ValueError:
+            block_min_score = 2.2
+        block_min_score = max(0.0, min(50.0, block_min_score))
+
+        def _is_replica_service(token: str) -> bool:
+            t = (token or "").strip().lower()
+            return bool(t) and re.fullmatch(r"[a-z0-9_-]*service-\d+", t) is not None
+
+        replica_log_best = 0.0
+        for comp, s in scores.items():
+            if s <= 0:
+                continue
+            if not _is_replica_service(comp):
+                continue
+            mods = modality_support.get(comp) or set()
+            if "logs" not in mods:
+                continue
+            replica_log_best = max(replica_log_best, float(s))
+
+        if top_node and top_node_metric >= node_min_metric and non_node_best > 0 and top_node_score >= non_node_best * node_min_ratio:
+            # Require explicit node CPU/memory metric evidence for precision.
+            ev = evidence.get(top_node) or []
+            has_node_metric = any(
+                (line.startswith("[metrics]") and ("node_memory" in line.lower() or "node_cpu" in line.lower()))
+                for line in ev
+            )
+            if has_node_metric:
+                node_modalities = modality_support.get(top_node) or set()
+                # Default: do NOT require traces for node gating, because many node-root cases
+                # have decisive node_cpu/node_memory metrics but sparse trace tagging.
+                require_traces = os.getenv("RCA_FAULT_LEVEL_GATE_NODE_REQUIRE_TRACES", "0") not in {"0", "false", "False"}
+                has_traces = ("traces" in node_modalities)
+
+                # If we have strong replica log evidence, do NOT gate to node unless node also has traces support.
+                block_on_replica_logs = os.getenv("RCA_FAULT_LEVEL_GATE_BLOCK_ON_REPLICA_LOG", "1") not in {"0", "false", "False"}
+                replica_blocks = block_on_replica_logs and (replica_log_best >= max(block_min_score, non_node_best * block_min_ratio))
+
+                if replica_blocks and not has_traces:
+                    gate = None
+                elif require_traces and not has_traces:
+                    gate = None
+                else:
+                    gate = "node"
+
+        if gate is None and top_tidb and top_tidb_metric >= tidb_min_metric and non_tidb_best > 0 and top_tidb_score >= non_tidb_best * tidb_min_ratio:
+            gate = "tidb"
+
+        if gate is None:
+            return
+
+        if gate == "node":
+            for c, s in list(scores.items()):
+                if s <= 0:
+                    continue
+                if cls._is_node(c):
+                    continue
+                scores[c] = s * penalty
+            return
+
+        if gate == "tidb":
+            for c, s in list(scores.items()):
+                if s <= 0:
+                    continue
+                if cls._is_tidb(c):
+                    continue
+                scores[c] = s * penalty
+            return
+
+    @classmethod
+    def _apply_kind_aware_rerank(
+        cls,
+        scores: Dict[str, float],
+        evidence: Dict[str, List[str]],
+        *,
+        modality_support: Dict[str, set[str]],
+        node_metric_max: Dict[str, float],
+        tidb_metric_max: Dict[str, float],
+    ) -> None:
+        """Kind-aware rerank (two-stage):
+
+        Stage-1: infer fault kind (service vs node vs tidb) using score competitiveness +
+        strongest metric evidence, with guardrails (replica log evidence blocks node unless
+        node also has traces).
+
+        Stage-2: apply a soft penalty to candidates not in the inferred kind, and
+        optionally suppress weak-evidence candidates (reduces popular-service collapse).
+
+        Controlled entirely by env vars to support A/B experiments.
+        """
+
+        # Basic sanity.
+        if not scores:
+            return
+
+        def _kind(c: str) -> str:
+            if cls._is_node(c):
+                return "node"
+            if cls._is_tidb(c):
+                return "tidb"
+            return "service"
+
+        # Optional: penalize candidates with no supporting evidence/modalities.
+        if os.getenv("RCA_KIND_RERANK_PENALIZE_NO_EVIDENCE", "1") not in {"0", "false", "False"}:
+            try:
+                no_ev_factor = float(os.getenv("RCA_KIND_RERANK_NO_EVIDENCE_FACTOR", "0.55"))
+            except ValueError:
+                no_ev_factor = 0.55
+            no_ev_factor = max(0.05, min(1.0, no_ev_factor))
+
+            for c, s in list(scores.items()):
+                if s <= 0:
+                    continue
+                mods = modality_support.get(c) or set()
+                ev = evidence.get(c) or []
+                if (not mods or len([m for m in mods if m]) == 0) and not ev:
+                    scores[c] = float(s) * no_ev_factor
+
+        # Gather best candidates per kind.
+        node_items = [(c, float(s)) for c, s in scores.items() if _kind(c) == "node" and float(s) > 0]
+        tidb_items = [(c, float(s)) for c, s in scores.items() if _kind(c) == "tidb" and float(s) > 0]
+        svc_items = [(c, float(s)) for c, s in scores.items() if _kind(c) == "service" and float(s) > 0]
+
+        non_node_best = max((s for _, s in svc_items + tidb_items), default=0.0)
+        non_tidb_best = max((s for _, s in svc_items + node_items), default=0.0)
+
+        top_node = max(node_items, key=lambda x: float(node_metric_max.get(x[0], 0.0)))[0] if node_items else ""
+        top_tidb = max(tidb_items, key=lambda x: float(tidb_metric_max.get(x[0], 0.0)))[0] if tidb_items else ""
+        top_svc = max(svc_items, key=lambda x: x[1])[0] if svc_items else ""
+
+        top_node_score = float(scores.get(top_node, 0.0)) if top_node else 0.0
+        top_node_metric = float(node_metric_max.get(top_node, 0.0)) if top_node else 0.0
+        top_tidb_score = float(scores.get(top_tidb, 0.0)) if top_tidb else 0.0
+        top_tidb_metric = float(tidb_metric_max.get(top_tidb, 0.0)) if top_tidb else 0.0
+        top_svc_score = float(scores.get(top_svc, 0.0)) if top_svc else 0.0
+
+        # Thresholds (kept similar to fault-level gate, but more explicit and tunable).
+        try:
+            node_min_metric = float(os.getenv("RCA_KIND_RERANK_NODE_MIN_METRIC", "6.0"))
+        except ValueError:
+            node_min_metric = 6.0
+        try:
+            node_strong_metric = float(os.getenv("RCA_KIND_RERANK_NODE_STRONG_METRIC", "8.0"))
+        except ValueError:
+            node_strong_metric = 8.0
+        try:
+            node_min_ratio = float(os.getenv("RCA_KIND_RERANK_NODE_MIN_RATIO", "0.82"))
+        except ValueError:
+            node_min_ratio = 0.82
+
+        try:
+            tidb_min_metric = float(os.getenv("RCA_KIND_RERANK_TIDB_MIN_METRIC", "3.0"))
+        except ValueError:
+            tidb_min_metric = 3.0
+        try:
+            tidb_min_ratio = float(os.getenv("RCA_KIND_RERANK_TIDB_MIN_RATIO", "0.72"))
+        except ValueError:
+            tidb_min_ratio = 0.72
+
+        try:
+            penalty = float(os.getenv("RCA_KIND_RERANK_PENALTY", "0.30"))
+        except ValueError:
+            penalty = 0.30
+        penalty = max(0.0, min(1.0, penalty))
+
+        # Guardrail: replica-level service log evidence blocks node promotion unless node has traces.
+        try:
+            block_min_ratio = float(os.getenv("RCA_KIND_RERANK_REPLICA_LOG_BLOCK_RATIO", "0.55"))
+        except ValueError:
+            block_min_ratio = 0.55
+        block_min_ratio = max(0.0, min(1.0, block_min_ratio))
+
+        try:
+            block_min_score = float(os.getenv("RCA_KIND_RERANK_REPLICA_LOG_BLOCK_SCORE", "2.2"))
+        except ValueError:
+            block_min_score = 2.2
+        block_min_score = max(0.0, min(50.0, block_min_score))
+
+        def _is_replica_service(token: str) -> bool:
+            t = (token or "").strip().lower()
+            return bool(t) and re.fullmatch(r"[a-z0-9_-]*service-\d+", t) is not None
+
+        replica_log_best = 0.0
+        for comp, s in scores.items():
+            if float(s) <= 0:
+                continue
+            if not _is_replica_service(comp):
+                continue
+            mods = modality_support.get(comp) or set()
+            if "logs" not in mods:
+                continue
+            replica_log_best = max(replica_log_best, float(s))
+
+        def _node_ok() -> bool:
+            if not top_node:
+                return False
+            if non_node_best <= 0:
+                return False
+            if top_node_metric < node_min_metric:
+                return False
+            if top_node_score < non_node_best * node_min_ratio:
+                return False
+
+            # Require explicit node CPU/memory metric evidence.
+            ev = evidence.get(top_node) or []
+            has_node_metric = any(
+                (line.startswith("[metrics]") and ("node_memory" in line.lower() or "node_cpu" in line.lower()))
+                for line in ev
+            )
+            if not has_node_metric:
+                return False
+
+            node_modalities = modality_support.get(top_node) or set()
+            has_traces = ("traces" in node_modalities)
+            # Default: do NOT require traces. Some true node-root cases have strong node_cpu/node_memory
+            # metrics but sparse trace tagging; requiring traces can cause systematic regressions.
+            require_traces = os.getenv("RCA_KIND_RERANK_NODE_REQUIRE_TRACES", "0") not in {"0", "false", "False"}
+
+            # If we have strong replica log evidence, do NOT promote node unless it also has traces.
+            block_on_replica_logs = os.getenv("RCA_KIND_RERANK_BLOCK_ON_REPLICA_LOG", "1") not in {"0", "false", "False"}
+            replica_blocks = block_on_replica_logs and (replica_log_best >= max(block_min_score, top_svc_score * block_min_ratio))
+            if replica_blocks and not has_traces:
+                return False
+
+            if require_traces and not has_traces:
+                # Allow bypass when node metric is extremely strong.
+                if top_node_metric >= node_strong_metric:
+                    return True
+                return False
+            return True
+
+        def _tidb_ok() -> bool:
+            if not top_tidb:
+                return False
+            if non_tidb_best <= 0:
+                return False
+            if top_tidb_metric < tidb_min_metric:
+                return False
+            if top_tidb_score < non_tidb_best * tidb_min_ratio:
+                return False
+            return True
+
+        node_ok = _node_ok()
+        tidb_ok = _tidb_ok()
+
+        # Decide kind.
+        # Keep behavior close to the original fault-level gate: prefer node when it passes,
+        # and only allow TiDB to override node when it is clearly stronger.
+        inferred: str | None = None
+        if node_ok and tidb_ok:
+            try:
+                tidb_over_node_margin = float(os.getenv("RCA_KIND_RERANK_TIDB_OVER_NODE_MIN_MARGIN", "0.12"))
+            except ValueError:
+                tidb_over_node_margin = 0.12
+            tidb_over_node_margin = max(0.0, min(1.0, tidb_over_node_margin))
+            if top_tidb_score > 0 and top_node_score > 0 and top_tidb_score >= top_node_score * (1.0 + tidb_over_node_margin):
+                inferred = "tidb"
+            else:
+                inferred = "node"
+        elif node_ok:
+            inferred = "node"
+        elif tidb_ok:
+            inferred = "tidb"
+        else:
+            inferred = None
+
+        if inferred is None:
+            # Default: service. (Do not penalize any kind.)
+            return
+
+        # Stage-2: soft penalty to other kinds.
+        for c, s in list(scores.items()):
+            if float(s) <= 0:
+                continue
+            if _kind(c) == inferred:
+                continue
+            scores[c] = float(s) * penalty
 
     @staticmethod
     def _apply_hint_bonus(scores: Dict[str, float], component_hints: List[str] | None) -> None:
@@ -161,13 +757,13 @@ class ConsensusOrchestrator:
 
     @staticmethod
     def _is_node(component: str) -> bool:
-        return bool(component) and (
-            component.startswith("aiops-k8s-") or component.startswith("k8s-master")
-        )
+        # GT 节点命名使用 aiops-k8s-XX；k8s-master* 不在 GT 中，保留会稳定伤害 LA。
+        return bool(component) and component.startswith("aiops-k8s-")
 
     @staticmethod
     def _is_tidb(component: str) -> bool:
-        return bool(component) and component.startswith("tidb-")
+        allow_tidb = os.getenv("RCA_ALLOW_TIDB_COMPONENTS", "1") not in {"0", "false", "False"}
+        return allow_tidb and bool(component) and component.startswith("tidb-")
 
     @classmethod
     def _apply_tidb_metric_dominance_override(cls, scores: Dict[str, float], tidb_metric_max: Dict[str, float]) -> None:
@@ -207,6 +803,87 @@ class ConsensusOrchestrator:
         margin = max(0.0, min(0.5, margin))
 
         scores[top_tidb] = max(top_tidb_score, non_tidb_best * (1.0 + margin))
+
+    @classmethod
+    def _apply_tidb_metric_competitive_boost(
+        cls,
+        scores: Dict[str, float],
+        tidb_metric_max: Dict[str, float],
+        modality_support: Dict[str, set[str]],
+    ) -> None:
+        """Lift the best TiDB candidate into a competitive score band.
+
+        Motivation (A direction): TiDB candidates often have decisive metrics evidence but
+        lose on total score because service candidates accumulate higher-weight traces/logs.
+        Instead of relaxing type inference (which can flip strong service cases to TiDB),
+        we boost TiDB *only when TiDB metrics are strong*, and add a guardrail when service
+        evidence is strong (logs/traces).
+        """
+
+        if os.getenv("RCA_ENABLE_TIDB_COMPETITIVE_BOOST", "0") in {"0", "false", "False"}:
+            return
+
+        tidb_items = [(c, float(s)) for c, s in scores.items() if cls._is_tidb(c) and float(s) > 0]
+        if not tidb_items:
+            return
+
+        top_tidb = max(tidb_items, key=lambda x: float(tidb_metric_max.get(x[0], 0.0)))[0]
+        top_tidb_score = float(scores.get(top_tidb, 0.0))
+        top_tidb_metric = float(tidb_metric_max.get(top_tidb, 0.0))
+
+        non_tidb_best = max((float(s) for c, s in scores.items() if not cls._is_tidb(c)), default=0.0)
+        if non_tidb_best <= 0:
+            return
+
+        # Base trigger: require sufficiently strong TiDB metric evidence.
+        try:
+            min_metric = float(os.getenv("RCA_TIDB_COMPETE_MIN_METRIC", "3.0"))
+        except ValueError:
+            min_metric = 3.0
+        if top_tidb_metric < min_metric:
+            return
+
+        # Guardrail: when the best service candidate has logs/traces support,
+        # only allow TiDB to be lifted if TiDB metric is even stronger.
+        svc_items = [(c, float(s)) for c, s in scores.items() if (not cls._is_node(c) and not cls._is_tidb(c)) and float(s) > 0]
+        top_svc = max(svc_items, key=lambda x: x[1])[0] if svc_items else ""
+        top_svc_score = float(scores.get(top_svc, 0.0)) if top_svc else 0.0
+        svc_mods = modality_support.get(top_svc) or set()
+        strong_service = bool(top_svc) and top_svc_score > 0 and ("logs" in svc_mods or "traces" in svc_mods)
+        if strong_service:
+            try:
+                strong_service_min_metric = float(os.getenv("RCA_TIDB_COMPETE_STRONG_SERVICE_MIN_METRIC", "5.0"))
+            except ValueError:
+                strong_service_min_metric = 5.0
+            if top_tidb_metric < strong_service_min_metric:
+                return
+
+        # Map TiDB metric strength into a target competitiveness ratio.
+        try:
+            base_ratio = float(os.getenv("RCA_TIDB_COMPETE_BASE_RATIO", "0.66"))
+        except ValueError:
+            base_ratio = 0.66
+        try:
+            max_ratio = float(os.getenv("RCA_TIDB_COMPETE_MAX_RATIO", "0.92"))
+        except ValueError:
+            max_ratio = 0.92
+        try:
+            slope = float(os.getenv("RCA_TIDB_COMPETE_SLOPE", "0.05"))
+        except ValueError:
+            slope = 0.05
+        base_ratio = max(0.0, min(1.0, base_ratio))
+        max_ratio = max(0.0, min(1.0, max_ratio))
+        slope = max(0.0, min(0.25, slope))
+        if max_ratio < base_ratio:
+            max_ratio = base_ratio
+
+        # Stronger metrics -> closer to non-TiDB best. Clamp to avoid overriding clear service winners.
+        target_ratio = base_ratio + slope * max(0.0, (top_tidb_metric - min_metric))
+        target_ratio = max(base_ratio, min(max_ratio, target_ratio))
+
+        target = float(non_tidb_best) * float(target_ratio)
+        if top_tidb_score < target:
+            scores[top_tidb] = target
 
     @classmethod
     def _apply_node_strong_metric_override(cls, scores: Dict[str, float], evidence: Dict[str, List[str]]) -> None:
@@ -288,7 +965,12 @@ class ConsensusOrchestrator:
             scores[component] *= (1.0 + boost)
 
     @classmethod
-    def _apply_node_metric_dominance_override(cls, scores: Dict[str, float], node_metric_max: Dict[str, float]) -> None:
+    def _apply_node_metric_dominance_override(
+        cls,
+        scores: Dict[str, float],
+        node_metric_max: Dict[str, float],
+        modality_support: Dict[str, set[str]],
+    ) -> None:
         if os.getenv("RCA_ENABLE_NODE_METRIC_DOMINANCE_OVERRIDE", "0") in {"0", "false", "False"}:
             return
         node_items = [(c, s) for c, s in scores.items() if cls._is_node(c) and s > 0]
@@ -296,7 +978,25 @@ class ConsensusOrchestrator:
             return
 
         # Pick the node with the strongest CPU/memory metric evidence.
-        top_node = max(node_items, key=lambda x: node_metric_max.get(x[0], 0.0))[0]
+        # When multiple nodes are close, prefer the one supported by more modalities
+        # (e.g., metrics + traces/logs), to avoid selecting the wrong node among neighbors.
+        top_metric = max((float(node_metric_max.get(c, 0.0)) for c, _ in node_items), default=0.0)
+        if top_metric <= 0:
+            return
+        try:
+            tie_margin = float(os.getenv("RCA_NODE_DOMINANCE_TIE_MARGIN", "0.06"))
+        except ValueError:
+            tie_margin = 0.06
+        tie_margin = max(0.0, min(0.3, tie_margin))
+        cutoff = top_metric * (1.0 - tie_margin)
+        close_nodes = [c for c, _ in node_items if float(node_metric_max.get(c, 0.0)) >= cutoff]
+
+        def _node_key(c: str) -> tuple[int, float, float]:
+            mods = modality_support.get(c) or set()
+            m = len([x for x in mods if x])
+            return (m, float(node_metric_max.get(c, 0.0)), float(scores.get(c, 0.0)))
+
+        top_node = max(close_nodes, key=_node_key) if close_nodes else max(node_items, key=lambda x: node_metric_max.get(x[0], 0.0))[0]
         top_node_score = float(scores.get(top_node, 0.0))
         top_node_metric = float(node_metric_max.get(top_node, 0.0))
 
@@ -306,6 +1006,16 @@ class ConsensusOrchestrator:
             min_metric = 5.2
         if top_node_metric < min_metric:
             return
+
+        # Extra safety: require traces support by default. This reduces false positives
+        # where node KPIs spike due to downstream service failures.
+        # Default OFF: node dominance is already a strong heuristic; requiring traces can
+        # reduce recall on true node faults.
+        require_traces = os.getenv("RCA_NODE_DOMINANCE_REQUIRE_TRACES", "0") not in {"0", "false", "False"}
+        if require_traces:
+            mods = modality_support.get(top_node) or set()
+            if "traces" not in mods:
+                return
 
         non_node_best = max((s for c, s in scores.items() if not cls._is_node(c)), default=0.0)
         if non_node_best <= 0:
@@ -523,7 +1233,7 @@ class ConsensusOrchestrator:
 
         base = float(self.component_priors.get(component, 1.0))
         try:
-            scale = float(os.getenv("RCA_COMPONENT_PRIOR_SCALE", "1.0"))
+            scale = float(os.getenv("RCA_COMPONENT_PRIOR_SCALE", "0.0"))
         except ValueError:
             scale = 1.0
         scale = max(0.0, min(1.0, scale))

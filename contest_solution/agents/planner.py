@@ -48,6 +48,11 @@ class PlannerAgent:
         for kw in keywords:
             if kw == "service":
                 continue
+            # Replica-specific pods frequently appear in the query (instance=xxx-0).
+            # Keep them as explicit hints because LA requires exact component match.
+            if re.fullmatch(r"[a-z0-9_-]*service-\d+", kw):
+                hints.append(kw)
+                continue
             if kw in self.KNOWN_COMPONENTS:
                 hints.append(kw)
                 continue
